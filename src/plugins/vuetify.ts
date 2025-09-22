@@ -12,15 +12,18 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 // Composables
 import { createVuetify } from 'vuetify'
 
-const lacGOTheme = {
-  dark: false,
-  color: {}
-}
-
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: 'lacGOTheme',
+    themes: {
+      lacGOTheme: {
+        dark: false,
+        colors: {
+          main: '#66BB6A',
+        }
+      }
+    }
   },
   icons: {
     defaultSet: 'mdi',
