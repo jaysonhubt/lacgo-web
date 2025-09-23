@@ -21,12 +21,12 @@
     <v-card-text class="pa-6">
       <v-form @submit.prevent="handleLogin" ref="loginForm" validate-on="submit">
         <v-text-field
-          v-model="form.phoneNumber"
-          label="Số Điện Thoại"
+          v-model="form.account"
+          label="Nhập số điện thoại hoặc email"
           type="string"
           variant="outlined"
           color="main"
-          :rules="phoneNumberRules"
+          :rules="accountRules"
           required
           hide-details="auto"
           prepend-inner-icon="mdi-phone-outline"
@@ -100,7 +100,7 @@ import {useRouter} from 'vue-router'
 const router = useRouter()
 // Form data
 const form = reactive({
-  phoneNumber: '',
+  account: '',
   password: '',
   rememberMe: false
 })
@@ -111,9 +111,12 @@ const showPassword = ref(false)
 const loginForm = ref()
 
 // Validation rules
-const phoneNumberRules = [
-  (v: string) => !!v || 'Hãy nhập số điện thoại',
-  (v: string) => v.match(/^0\d{9}$/g) || 'Số điện thoại không đúng',
+const accountRules = [
+  (v: string) => !!v || 'Hãy nhập số điện thoại hoặc email',
+  (v: string) => {
+    const pattern = /^(?:(?:\+?0)(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9[0-9])\d{7}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    return pattern.test(v) || 'Nhập số điện thoại hoặc email hợp lệ'
+  }
 ]
 
 const passwordRules = [
