@@ -32,6 +32,7 @@
           prepend-inner-icon="mdi-phone-outline"
           class="mb-4"
           autocomplete="off"
+          rounded="lg"
         />
 
         <v-text-field
@@ -47,6 +48,7 @@
           @click:append-inner="showPassword = !showPassword"
           color="green-lighten-1"
           class="mb-4"
+          rounded="lg"
         />
 
         <div class="d-flex justify-end align-center mb-6">

@@ -30,6 +30,7 @@
           prepend-inner-icon="mdi-phone-outline"
           color="green-lighten-2"
           class="mb-6"
+          rounded="lg"
         />
 
         <v-btn
@@ -58,27 +59,27 @@
         <template v-slot:title>
           Email đã được gửi
         </template>
-        <v-typography class="alert-text" variant="body-2">
+        <p class="alert-text text-body-2">
           Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn.
           Vui lòng kiểm tra hộp thư và làm theo hướng dẫn.
-        </v-typography>
+        </p>
       </v-alert>
     </v-card-text>
 
     <!-- Footer -->
     <v-divider></v-divider>
     <v-card-actions class="pa-6">
-      <v-typography class="text-center w-100" variant="body-2" color="grey-darken-1">
-        <v-btn
+      <div class="text-center w-100 text-body-2 text-grey-darken-1">
+
+        <router-link
           variant="text"
-          color="green-lighten-2"
-          to="/login"
-          prepend-icon="mdi-login"
-          class="ml-2 text-decoration-none text-green-lighten-1 font-weight-bold"
+          color="green-lighten-1"
+          :to="{name: 'Login'}"
+          class="ml-2 text-body-1 text-decoration-none text-green-lighten-1 font-weight-bold"
         >
           Quay lại đăng nhập
-        </v-btn>
-      </v-typography>
+        </router-link>
+      </div>
     </v-card-actions>
   </v-container>
 </template>
