@@ -8,7 +8,7 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
-
+import { en, vi } from 'vuetify/locale'
 // Composables
 import { createVuetify } from 'vuetify'
 
@@ -32,4 +32,9 @@ export default createVuetify({
       mdi,
     },
   },
+  locale: {
+    locale: 'vi',
+    fallback: 'en',
+    messages: { vi, en }
+  }
 })

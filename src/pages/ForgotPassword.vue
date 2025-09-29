@@ -33,18 +33,18 @@
           rounded="lg"
         />
 
-        <v-btn
-          type="submit"
-          color="green-lighten-1"
-          size="large"
-          block
-          :loading="loading"
-          class="mb-4"
-          rounded="xl"
-          prepend-icon="mdi-email-send"
-        >
-          Đặt lại mật khẩu
-        </v-btn>
+         <v-btn
+           type="submit"
+           color="green-lighten-1"
+           size="large"
+           block
+           :loading="authStore.isLoading"
+           class="mb-4"
+           rounded="xl"
+           prepend-icon="mdi-email-send"
+         >
+           Đặt lại mật khẩu
+         </v-btn>
       </v-form>
 
       <!-- Success message -->
@@ -86,14 +86,16 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 // Form data
 const form = reactive({
-  email: ''
+  account: ''
 })
 
 // UI state
-const loading = ref(false)
 const emailSent = ref(false)
 const forgotPasswordForm = ref()
 
@@ -111,18 +113,14 @@ const handleForgotPassword = async () => {
   const { valid } = await forgotPasswordForm.value.validate()
 
   if (valid) {
-    loading.value = true
+    const result = await authStore.forgotPassword(form.account)
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-
+    if (result.success) {
       // Show success message
       emailSent.value = true
-    } catch (error) {
-      console.error('Forgot password error:', error)
-    } finally {
-      loading.value = false
+    } else {
+      // Show error message (you can add a snackbar or alert here)
+      console.error('Forgot password failed:', result.error)
     }
   }
 }

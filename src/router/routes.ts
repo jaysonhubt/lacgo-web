@@ -1,11 +1,11 @@
 export const routes: any = [
   {
     path: '/',
-    name: 'Intro',
-    component: () => import('@/pages/Intro.vue'),
+    name: 'Home',
+    component: () => import('@/pages/Home.vue'),
     meta: {
-      title: 'Intro',
-      layout: 'guest'
+      title: 'Home',
+      layout: 'default'
     }
   },
   {

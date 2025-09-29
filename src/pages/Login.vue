@@ -62,17 +62,17 @@
           </router-link>
         </div>
 
-        <v-btn
-          type="submit"
-          color="green-lighten-1"
-          size="large"
-          block
-          :loading="loading"
-          class="mb-4"
-          rounded="xl"
-        >
-          Đăng nhập
-        </v-btn>
+         <v-btn
+           type="submit"
+           color="green-lighten-1"
+           size="large"
+           block
+           :loading="authStore.isLoading"
+           class="mb-4"
+           rounded="xl"
+         >
+           Đăng nhập
+         </v-btn>
       </v-form>
     </v-card-text>
 
@@ -97,14 +97,15 @@
 <script lang="ts" setup>
 import {ref, reactive} from 'vue'
 import {useRouter} from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 
 const router = useRouter()
 // Form data
 const form = reactive({
   account: '',
-  password: '',
-  rememberMe: false
+  password: ''
 })
 
 // UI state
@@ -128,21 +129,21 @@ const passwordRules = [
 
 // Methods
 const handleLogin = async () => {
-  const {valid} = await loginForm.value.validate()
+  const { valid } = await loginForm.value.validate()
 
   if (valid) {
-    loading.value = true
+    const result = await authStore.login({
+      account: form.account,
+      password: form.password
+    })
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
-
-      // Redirect to home page
-      router.push('/')
-    } catch (error) {
-      console.error('Login error:', error)
-    } finally {
-      loading.value = false
+    if (result.success) {
+      // Redirect to home page or intended page
+      const redirect = router.currentRoute.value.query.redirect as string
+      router.push(redirect || '/')
+    } else {
+      // Show error message (you can add a snackbar or alert here)
+      console.error('Login failed:', result.error)
     }
   }
 }

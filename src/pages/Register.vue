@@ -21,10 +21,10 @@
     <v-card-text class="pa-6">
       <v-form @submit.prevent="handleRegister" ref="registerForm" validate-on="submit">
         <v-text-field
-          v-model="form.fullName"
+          v-model="form.name"
           label="Họ và tên"
           variant="outlined"
-          :rules="fullNameRules"
+          :rules="nameRules"
           required
           hide-details="auto"
           prepend-inner-icon="mdi-account-outline"
@@ -128,17 +128,17 @@
           </template>
         </v-checkbox>
 
-        <v-btn
-          type="submit"
-          color="green-lighten-1"
-          size="large"
-          block
-          :loading="loading"
-          class="mb-4"
-          rounded="xl"
-        >
-          Tạo tài khoản
-        </v-btn>
+         <v-btn
+           type="submit"
+           color="green-lighten-1"
+           size="large"
+           block
+           :loading="authStore.isLoading"
+           class="mb-4"
+           rounded="xl"
+         >
+           Tạo tài khoản
+         </v-btn>
       </v-form>
     </v-card-text>
 
@@ -375,12 +375,14 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // Form data
 const form = reactive({
-  fullName: '',
+  name: '',
   phone: '',
   email: '',
   password: '',
@@ -389,7 +391,6 @@ const form = reactive({
 })
 
 // UI state
-const loading = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const registerForm = ref()
@@ -397,7 +398,7 @@ const showTermsSheet = ref(false)
 const showPrivacySheet = ref(false)
 
 // Validation rules
-const fullNameRules = [
+const nameRules = [
   (v: string) => !!v || 'Họ và tên là bắt buộc',
   (v: string) => (v && v.length >= 2) || 'Họ và tên phải có ít nhất 2 ký tự'
 ]
@@ -430,18 +431,21 @@ const handleRegister = async () => {
   const { valid } = await registerForm.value.validate()
 
   if (valid) {
-    loading.value = true
+    const result = await authStore.register({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      password: form.password,
+      confirmPassword: form.confirmPassword,
+      acceptTerms: form.acceptTerms
+    })
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      // Redirect to login page
-      router.push('/login')
-    } catch (error) {
-      console.error('Register error:', error)
-    } finally {
-      loading.value = false
+    if (result.success) {
+      // Redirect to home page
+      router.push('/')
+    } else {
+      // Show error message (you can add a snackbar or alert here)
+      console.error('Register failed:', result.error)
     }
   }
 }
