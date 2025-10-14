@@ -44,4 +44,31 @@ export const routes: any = [
       layout: 'guest'
     }
   },
+  {
+    path: '/trip',
+    name: 'Trip',
+    component: () => import('@/pages/Trip.vue'),
+    meta: {
+      title: 'Chuyến xe',
+      layout: 'default'
+    }
+  },
+  {
+    path: '/trip-history',
+    name: 'TripHistory',
+    component: () => import('@/pages/TripHistory.vue'),
+    meta: {
+      title: 'Lịch sử chuyến xe',
+      layout: 'default'
+    }
+  },
+  {
+    path: '/trip-detail',
+    name: 'TripDetail',
+    component: () => import('@/pages/TripDetail.vue'),
+    meta: {
+      title: 'Chi tiết chuyến xe',
+      layout: 'default'
+    }
+  },
 ]

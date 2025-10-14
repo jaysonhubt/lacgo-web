@@ -456,6 +456,7 @@
 
 <script setup lang="ts">
 import {ref, computed, nextTick, onMounted, watch} from 'vue'
+import {useRouter} from 'vue-router'
 import {useAuthStore} from '@/stores/auth'
 import {
   getCurrentDate,
@@ -468,6 +469,7 @@ import {
 } from '@/utils/dateTime'
 import { DATE_TIME_CONFIG } from '@/config/dateTime'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
 
@@ -822,8 +824,16 @@ const searchVehicles = () => {
 
   console.log('Searching vehicles with data:', searchData)
 
-  // TODO: Implement actual search logic
-  // This could navigate to a results page or show a modal with results
+  // Navigate to trip results page with search data
+  router.push({
+    path: '/trip',
+    query: {
+      from: searchData.from,
+      to: searchData.to,
+      dateTime: searchData.dateTime,
+      service: searchData.service
+    }
+  })
 }
 
 const departNow = () => {

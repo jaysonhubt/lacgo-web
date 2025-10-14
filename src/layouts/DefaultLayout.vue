@@ -7,7 +7,7 @@
       <v-btn to="/" :value="'home'">
         <v-icon icon="mdi-home-outline"></v-icon>
       </v-btn>
-      <v-btn to="/trips" :value="'trips'">
+      <v-btn to="/trip" :value="'trips'">
         <v-icon icon="mdi-car-outline"></v-icon>
       </v-btn>
       <v-btn to="/messages" :value="'messages'">
