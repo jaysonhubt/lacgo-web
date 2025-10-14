@@ -40,7 +40,7 @@
     </div>
 
     <!-- Search Input Section -->
-    <div class="search-section pa-4">
+    <div class="search-section pa-4 py-2">
       <v-card
         class="search-card"
         elevation="2"
@@ -74,6 +74,58 @@
               </p>
             </div>
             <v-icon color="grey-darken-1">mdi-chevron-right</v-icon>
+          </div>
+        </v-card-text>
+
+        <!-- Divider -->
+        <v-divider></v-divider>
+
+        <v-card-text class="pt-4">
+          <!-- Service Options -->
+          <div class="service-options">
+            <div class="service-grid">
+              <v-card
+                v-for="option in allServiceOptions"
+                :key="option.value"
+                class="service-option-card"
+                :class="{ 'selected': selectedService === option.value }"
+                elevation="1"
+                rounded="lg"
+                @click="selectService(option.value)"
+              >
+                <v-card-text class="pa-1 text-center">
+                  <v-icon
+                    :color="selectedService === option.value ? 'green-lighten-1' : 'grey-darken-1'"
+                    size="24"
+                    class="mb-2"
+                  >
+                    {{ option.icon }}
+                  </v-icon>
+                  <div
+                    class="text-caption font-weight-medium"
+                    :class="selectedService === option.value ? 'text-green-lighten-1' : 'text-grey-darken-1'"
+                  >
+                    {{ option.label }}
+                  </div>
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+
+          <!-- Search Button -->
+          <div class="search-button-section">
+            <v-btn
+              class="search-btn"
+              color="green-lighten-1"
+              size="x-large"
+              block
+              rounded="xl"
+              :disabled="!canSearch"
+              @click="searchVehicles"
+            >
+              <v-icon start size="20">mdi-magnify</v-icon>
+              <span class="font-weight-bold">Tìm xe</span>
+            </v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -115,6 +167,7 @@
                   hide-details
                   color="green-lighten-1"
                   @click="openLocationPicker('from')"
+                  @input="(event) => searchFromLocation(event.target.value)"
                 >
                   <template v-slot:append-inner>
                     <v-btn
@@ -141,6 +194,7 @@
                   hide-details
                   color="green-lighten-1"
                   @click="openLocationPicker('to')"
+                  @input="(event) => searchToLocation(event.target.value)"
                 >
                   <template v-slot:append-inner>
                     <v-btn
@@ -169,7 +223,7 @@
           </div>
 
           <!-- Location Picker -->
-          <div v-if="showLocationPicker" class="location-picker">
+          <div class="location-picker">
             <!-- Current Location & Saved Locations Tags -->
             <div class="location-tags mb-4">
               <!-- Current Location Tag -->
@@ -186,7 +240,7 @@
 
               <!-- Saved Locations Tags -->
               <v-chip
-                v-for="location in savedLocations"
+                v-for="location in filteredSavedLocations"
                 :key="location.id"
                 class="location-tag mb-2 mr-2"
                 color="green-lighten-1"
@@ -198,12 +252,17 @@
               </v-chip>
             </div>
 
-            <!-- Recent Locations -->
-            <div v-if="recentLocations.length > 0" class="mb-6">
-              <h3 class="text-h6 font-weight-bold mb-3">Địa điểm gần đây</h3>
-              <div class="recent-locations">
+
+            <!-- Recent Locations / Search Results -->
+            <div class="mb-6">
+              <h4 class="text-subtitle-1 font-weight-medium mb-3">
+                {{ (currentInputType === 'from' ? fromLocation : toLocation) ? 'Kết quả tìm kiếm' : 'Địa điểm gần đây' }}
+              </h4>
+
+
+              <div v-if="displayLocations.length > 0" class="recent-locations">
                 <v-card
-                  v-for="location in recentLocations.slice(0, 5)"
+                  v-for="location in displayLocations.slice(0, 5)"
                   :key="location.id"
                   class="location-item mb-2"
                   elevation="1"
@@ -220,6 +279,10 @@
                     </div>
                   </v-card-text>
                 </v-card>
+              </div>
+
+              <div v-else class="text-center pa-4 text-grey-darken-1">
+                <p>Không có kết quả tìm kiếm</p>
               </div>
             </div>
           </div>
@@ -341,46 +404,30 @@
         <!-- Quick Time Options -->
         <div class="mb-4">
           <h3 class="text-h6 font-weight-bold mb-3">Thời gian nhanh</h3>
+          <div class="quick-time-chips mb-4">
+            <v-chip
+              :key="'now'"
+              class="time-chip"
+              :color="'green-lighten-1'"
+              :variant="'flat'"
+              @click="departNow"
+            >
+              <v-icon start>mdi-rocket-launch</v-icon>
+              Bây giờ
+            </v-chip>
+          </div>
 
-          <!-- Quick Time Chips -->
           <div class="quick-time-chips mb-4">
             <v-chip
               v-for="time in quickTimes"
               :key="time.value"
               class="time-chip"
-              :color="selectedTime === time.value ? 'green-lighten-1' : 'grey-darken-1'"
-              :variant="selectedTime === time.value ? 'flat' : 'outlined'"
+              :color="selectedTime === getTimeInMinutes(time.value) ? 'green-lighten-1' : 'grey-darken-1'"
+              :variant="selectedTime === getTimeInMinutes(time.value) ? 'flat' : 'outlined'"
               @click="selectQuickTime(time.value)"
             >
               {{ time.label }}
             </v-chip>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="action-buttons">
-            <v-btn
-              color="green-lighten-1"
-              variant="elevated"
-              size="large"
-              block
-              class="action-btn mb-2"
-              @click="departNow"
-            >
-              <v-icon start>mdi-rocket-launch</v-icon>
-              Xuất phát ngay
-            </v-btn>
-
-            <v-btn
-              color="green-lighten-1"
-              variant="outlined"
-              size="large"
-              block
-              class="action-btn"
-              @click="setCurrentTime"
-            >
-              <v-icon start>mdi-clock-outline</v-icon>
-              Bây giờ
-            </v-btn>
           </div>
         </div>
 
@@ -408,15 +455,16 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, nextTick} from 'vue'
+import {ref, computed, nextTick, onMounted, watch} from 'vue'
 import {useAuthStore} from '@/stores/auth'
-import { 
-  getCurrentDate, 
-  getDateRange, 
-  getCurrentTimeRounded, 
-  formatTime, 
-  getTimeInMinutes, 
-  formatDateTime
+import {
+  getCurrentDate,
+  getDateRange,
+  getCurrentTimeRounded,
+  formatTime,
+  getTimeInMinutes,
+  formatDateTime,
+  formatDateToLocal
 } from '@/utils/dateTime'
 import { DATE_TIME_CONFIG } from '@/config/dateTime'
 
@@ -430,6 +478,24 @@ const toLocation = ref('')
 const selectedDestination = ref('')
 const showLocationPicker = ref(false)
 const currentInputType = ref('from') // 'from' or 'to'
+const searchQuery = ref('')
+const wardsData = ref([])
+const searchResults = ref([])
+const fromLocationSuggestions = ref([])
+const toLocationSuggestions = ref([])
+
+// Service states
+const selectedService = ref('1')
+
+// All service options
+const allServiceOptions = ref([
+  { value: '1', label: '1 chỗ', icon: 'mdi-account' },
+  { value: '2', label: '2 chỗ', icon: 'mdi-account-multiple' },
+  { value: 'back', label: 'Hàng sau', icon: 'mdi-car-back' },
+  { value: 'whole', label: 'Cả xe', icon: 'mdi-car' },
+  { value: 'small', label: 'Gửi đồ nhỏ', icon: 'mdi-package-variant' },
+  { value: 'large', label: 'Gửi đồ to', icon: 'mdi-package-variant-closed' }
+])
 
         // Time states
         const openTimeSheet = ref(false)
@@ -471,38 +537,199 @@ const recentLocations = ref([
 const quickTimes = ref(
   DATE_TIME_CONFIG.QUICK_TIME_OPTIONS.map(option => ({
     ...option,
-    value: option.isAction ? 'now' : getTimeInMinutes(option.minutes!)
+    value: option.isAction ? 'now' : option.minutes
   }))
 )
 
 // Computed properties
 const showCurrentLocation = computed(() => {
-  // Only show current location if the other input doesn't have it
-  if (currentInputType.value === 'from') {
-    return toLocation.value !== currentLocation.value.name
-  } else {
-    return fromLocation.value !== currentLocation.value.name
-  }
+  // Only show current location if it's not selected in either input
+  return fromLocation.value !== currentLocation.value.name && toLocation.value !== currentLocation.value.name
+})
+
+// Computed property for filtered saved locations
+const filteredSavedLocations = computed(() => {
+  return savedLocations.value.filter(location => {
+    const isSelectedInFrom = fromLocation.value === location.name
+    const isSelectedInTo = toLocation.value === location.name
+    return !isSelectedInFrom && !isSelectedInTo
+  })
 })
 
 const dateRange = computed(() => getDateRange(DATE_TIME_CONFIG.DEFAULT_DATE_RANGE_DAYS))
 const minDate = computed(() => dateRange.value.min)
 const maxDate = computed(() => dateRange.value.max)
 
+// Check if can search
+const canSearch = computed(() => {
+  return toLocation.value.trim() !== '' && selectedDateTime.value.trim() !== ''
+})
+
+// Computed property for displaying locations based on current input
+const displayLocations = computed(() => {
+  const currentSuggestions = currentInputType.value === 'from' ? fromLocationSuggestions.value : toLocationSuggestions.value
+
+  // If there are suggestions, show them regardless of input value
+  if (currentSuggestions.length > 0) {
+    const mappedResults = currentSuggestions.map((ward: any, index: number) => ({
+      id: `ward-${ward.ward_id}-${index}`,
+      name: ward.old,
+      address: ward.new,
+      icon: currentInputType.value === 'from' ? 'mdi-map-marker' : 'mdi-flag',
+      ward: ward
+    }))
+    return mappedResults
+  }
+
+  // Filter out locations that are already selected in either input
+  return recentLocations.value.filter(location => {
+    const isSelectedInFrom = fromLocation.value === location.name
+    const isSelectedInTo = toLocation.value === location.name
+    return !isSelectedInFrom && !isSelectedInTo
+  })
+})
+
+// Load wards data
+const loadWardsData = async () => {
+  try {
+    const response = await fetch('/wards_pt_hn.json')
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    wardsData.value = data
+  } catch (error) {
+    console.error('Error loading wards data:', error)
+  }
+}
+
+// Remove diacritics for search
+const removeDiacritics = (str: string): string => {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+}
+
+// Search locations
+const searchLocations = (query: string) => {
+  if (!query.trim()) {
+    searchResults.value = []
+    return
+  }
+
+  const normalizedQuery = removeDiacritics(query.toLowerCase())
+
+  searchResults.value = wardsData.value.filter((ward: any) => {
+    const oldMatch = removeDiacritics(ward.old.toLowerCase()).includes(normalizedQuery)
+    const newMatch = removeDiacritics(ward.new.toLowerCase()).includes(normalizedQuery)
+    return oldMatch || newMatch
+  }).slice(0, 10) // Limit to 10 results
+}
+
+// Search from location
+const searchFromLocation = (query: any) => {
+  // Convert to string if needed
+  const queryStr = typeof query === 'string' ? query : String(query || '')
+
+  if (!queryStr.trim()) {
+    fromLocationSuggestions.value = []
+    return
+  }
+
+  const normalizedQuery = removeDiacritics(queryStr.toLowerCase())
+
+  const results = wardsData.value.filter((ward: any) => {
+    const oldMatch = removeDiacritics(ward.old.toLowerCase()).includes(normalizedQuery)
+    const newMatch = removeDiacritics(ward.new.toLowerCase()).includes(normalizedQuery)
+    const isSelected = ward.old === toLocation.value || ward.new === toLocation.value
+    return (oldMatch || newMatch) && !isSelected
+  }).slice(0, 10) // Limit to 10 results
+
+  fromLocationSuggestions.value = results
+}
+
+// Search to location
+const searchToLocation = (query: any) => {
+  // Convert to string if needed
+  const queryStr = typeof query === 'string' ? query : String(query || '')
+
+  if (!queryStr.trim()) {
+    toLocationSuggestions.value = []
+    return
+  }
+
+  const normalizedQuery = removeDiacritics(queryStr.toLowerCase())
+
+  const results = wardsData.value.filter((ward: any) => {
+    const oldMatch = removeDiacritics(ward.old.toLowerCase()).includes(normalizedQuery)
+    const newMatch = removeDiacritics(ward.new.toLowerCase()).includes(normalizedQuery)
+    const isSelected = ward.old === fromLocation.value || ward.new === fromLocation.value
+    return (oldMatch || newMatch) && !isSelected
+  }).slice(0, 10) // Limit to 10 results
+
+  toLocationSuggestions.value = results
+}
+
 
 // Methods
 const openLocationPicker = (type: 'from' | 'to') => {
   currentInputType.value = type
   showLocationPicker.value = true
+  searchQuery.value = ''
+  searchResults.value = []
+
+  // Clear suggestions for the other input
+  if (type === 'from') {
+    toLocationSuggestions.value = []
+    // Clear from suggestions if input is empty
+    if (!fromLocation.value || !fromLocation.value.trim()) {
+      fromLocationSuggestions.value = []
+    }
+  } else {
+    fromLocationSuggestions.value = []
+    // Clear to suggestions if input is empty
+    if (!toLocation.value || !toLocation.value.trim()) {
+      toLocationSuggestions.value = []
+    }
+  }
+
+  // Load wards data if not already loaded
+  if (wardsData.value.length === 0) {
+    loadWardsData()
+  }
 }
 
 const selectLocation = (location: any) => {
-  if (currentInputType.value === 'from') {
-    fromLocation.value = location.name
+  let locationName = ''
+
+  // Handle ward data (has old and new properties)
+  if (location.ward) {
+    locationName = location.ward.old
+  } else if (location.old && location.new) {
+    locationName = location.old
   } else {
-    toLocation.value = location.name
+    locationName = location.name
+  }
+
+  if (currentInputType.value === 'from') {
+    fromLocation.value = locationName
+    fromLocationSuggestions.value = []
+    // Clear suggestions for the other input to refresh the display
+    toLocationSuggestions.value = []
+  } else {
+    toLocation.value = locationName
+    toLocationSuggestions.value = []
+    // Clear suggestions for the other input to refresh the display
+    fromLocationSuggestions.value = []
   }
   showLocationPicker.value = false
+  searchQuery.value = ''
+  searchResults.value = []
 }
 
 const swapLocations = () => {
@@ -526,15 +753,17 @@ const confirmTime = () => {
   openTimeSheet.value = false
 }
 
-const selectQuickTime = (time: string) => {
+const selectQuickTime = (time: string | number) => {
   if (time === 'now') {
     departNow()
     return
   }
-  selectedTime.value = time
-  const [hour, minute] = time.split(':')
-  selectedHour.value = parseInt(hour)
-  selectedMinute.value = parseInt(minute)
+
+  // Calculate time from current time + minutes
+  const timeData = getCurrentTimeRounded(Number(time))
+  selectedTime.value = formatTime(timeData.hour, timeData.minute)
+  selectedHour.value = timeData.hour
+  selectedMinute.value = timeData.minute
 
   // Auto scroll to selected time
   nextTick(() => {
@@ -564,10 +793,37 @@ const updateSelectedTime = () => {
 
 const clearFromLocation = () => {
   fromLocation.value = ''
+  fromLocationSuggestions.value = []
+  // Clear suggestions for the other input as well to refresh the display
+  toLocationSuggestions.value = []
 }
 
 const clearToLocation = () => {
   toLocation.value = ''
+  toLocationSuggestions.value = []
+  // Clear suggestions for the other input as well to refresh the display
+  fromLocationSuggestions.value = []
+}
+
+// Service methods
+const selectService = (service: string) => {
+  selectedService.value = service
+}
+
+const searchVehicles = () => {
+  if (!canSearch.value) return
+
+  const searchData = {
+    from: fromLocation.value,
+    to: toLocation.value,
+    dateTime: selectedDateTime.value,
+    service: selectedService.value
+  }
+
+  console.log('Searching vehicles with data:', searchData)
+
+  // TODO: Implement actual search logic
+  // This could navigate to a results page or show a modal with results
 }
 
 const departNow = () => {
@@ -625,6 +881,18 @@ const setCurrentTime = () => {
   updateSelectedTime()
   confirmTime()
 }
+
+// Watch for location sheet opening
+watch(openLocationSheet, (newValue) => {
+  if (newValue && wardsData.value.length === 0) {
+    loadWardsData()
+  }
+})
+
+// Load wards data on component mount
+onMounted(() => {
+  loadWardsData()
+})
 </script>
 
 <style scoped>
@@ -717,17 +985,88 @@ const setCurrentTime = () => {
 
 .service-section {
   background: #f8f9fa;
-  min-height: 120px;
 }
 
 .service-card {
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .service-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+}
+
+.service-options {
+  margin-bottom: 20px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .service-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.service-option-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background: #f8f9fa;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-option-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.service-option-card.selected {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: #4caf50;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+}
+
+.service-option-card.selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.25);
+}
+
+.search-button-section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.search-btn {
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: none;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  height: 56px;
+  font-size: 1.1rem;
+  border-radius: 16px !important;
+}
+
+.search-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Location Sheet Styles */
@@ -957,7 +1296,6 @@ const setCurrentTime = () => {
 
 /* Location Picker */
 .location-picker {
-  background: #f8f9fa;
   border-radius: 12px;
   padding: 16px;
 }
