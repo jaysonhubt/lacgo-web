@@ -824,9 +824,9 @@ const searchVehicles = () => {
 
   console.log('Searching vehicles with data:', searchData)
 
-  // Navigate to trip results page with search data
+  // Navigate to trips page with search data
   router.push({
-    path: '/trip',
+    path: '/trips',
     query: {
       from: searchData.from,
       to: searchData.to,

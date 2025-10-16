@@ -23,9 +23,7 @@ declare module 'vue-router/auto-routes' {
     '/Intro': RouteRecordInfo<'/Intro', '/Intro', Record<never, never>, Record<never, never>>,
     '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/Register': RouteRecordInfo<'/Register', '/Register', Record<never, never>, Record<never, never>>,
-    '/Trip': RouteRecordInfo<'/Trip', '/Trip', Record<never, never>, Record<never, never>>,
-    '/TripDetail': RouteRecordInfo<'/TripDetail', '/TripDetail', Record<never, never>, Record<never, never>>,
-    '/TripHistory': RouteRecordInfo<'/TripHistory', '/TripHistory', Record<never, never>, Record<never, never>>,
+    '/Trips': RouteRecordInfo<'/Trips', '/Trips', Record<never, never>, Record<never, never>>,
     '/Welcome': RouteRecordInfo<'/Welcome', '/Welcome', Record<never, never>, Record<never, never>>,
   }
 
@@ -60,16 +58,8 @@ declare module 'vue-router/auto-routes' {
       routes: '/Register'
       views: never
     }
-    'src/pages/Trip.vue': {
-      routes: '/Trip'
-      views: never
-    }
-    'src/pages/TripDetail.vue': {
-      routes: '/TripDetail'
-      views: never
-    }
-    'src/pages/TripHistory.vue': {
-      routes: '/TripHistory'
+    'src/pages/Trips.vue': {
+      routes: '/Trips'
       views: never
     }
     'src/pages/Welcome.vue': {

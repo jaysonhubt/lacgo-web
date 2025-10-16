@@ -9,7 +9,7 @@
             variant="text"
             color="grey-darken-2"
             class="mr-3"
-            @click="goBack"
+            @click="$emit('go-back')"
           ></v-btn>
           <div>
             <h1 class="text-h5 font-weight-bold text-grey-darken-2">
@@ -23,59 +23,6 @@
       </div>
     </div>
 
-    <!-- Filter Section -->
-    <div class="filter-section pa-4">
-      <v-card class="filter-card" elevation="2" rounded="xl">
-        <v-card-text class="pa-4">
-          <div class="d-flex align-center justify-space-between mb-3">
-            <h3 class="text-h6 font-weight-bold">Bộ lọc</h3>
-            <v-btn
-              variant="text"
-              color="green-lighten-1"
-              size="small"
-              @click="clearFilters"
-            >
-              Xóa bộ lọc
-            </v-btn>
-          </div>
-
-          <!-- Status Filter -->
-          <div class="mb-3">
-            <p class="text-body-2 font-weight-medium mb-2">Trạng thái</p>
-            <div class="filter-chips">
-              <v-chip
-                v-for="status in statusFilters"
-                :key="status.value"
-                class="filter-chip mr-2 mb-2"
-                :color="selectedStatus === status.value ? 'green-lighten-1' : 'grey-lighten-2'"
-                :variant="selectedStatus === status.value ? 'flat' : 'outlined'"
-                @click="selectStatus(status.value)"
-              >
-                {{ status.label }}
-              </v-chip>
-            </div>
-          </div>
-
-          <!-- Date Filter -->
-          <div>
-            <p class="text-body-2 font-weight-medium mb-2">Thời gian</p>
-            <div class="filter-chips">
-              <v-chip
-                v-for="period in periodFilters"
-                :key="period.value"
-                class="filter-chip mr-2 mb-2"
-                :color="selectedPeriod === period.value ? 'green-lighten-1' : 'grey-lighten-2'"
-                :variant="selectedPeriod === period.value ? 'flat' : 'outlined'"
-                @click="selectPeriod(period.value)"
-              >
-                {{ period.label }}
-              </v-chip>
-            </div>
-          </div>
-        </v-card-text>
-      </v-card>
-    </div>
-
     <!-- Trip History List -->
     <div class="history-section pa-4">
       <v-card class="history-card" elevation="2" rounded="xl">
@@ -84,12 +31,12 @@
           
           <div class="trip-history-list">
             <v-card
-              v-for="trip in filteredHistory"
+              v-for="trip in tripHistory"
               :key="trip.id"
               class="history-item mb-3"
               elevation="1"
               rounded="lg"
-              @click="goToTripDetail(trip)"
+              @click="$emit('go-to-trip-detail', trip)"
             >
               <v-card-text class="pa-4">
                 <div class="d-flex align-center justify-space-between">
@@ -138,8 +85,8 @@
             </v-card>
           </div>
 
-          <!-- No Results -->
-          <div v-if="filteredHistory.length === 0" class="text-center pa-8">
+          <!-- No Recent Trips -->
+          <div v-if="tripHistory.length === 0" class="text-center pa-8">
             <v-icon size="64" color="grey-lighten-2" class="mb-4">mdi-history</v-icon>
             <h3 class="text-h6 text-grey-darken-1 mb-2">Không có chuyến xe nào</h3>
             <p class="text-body-2 text-grey-darken-1">
@@ -153,28 +100,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
-const router = useRouter()
-
-// Filter options
-const statusFilters = ref([
-  { value: 'all', label: 'Tất cả' },
-  { value: 'completed', label: 'Hoàn thành' },
-  { value: 'cancelled', label: 'Đã hủy' },
-  { value: 'upcoming', label: 'Sắp tới' }
-])
-
-const periodFilters = ref([
-  { value: 'all', label: 'Tất cả' },
-  { value: 'week', label: 'Tuần này' },
-  { value: 'month', label: 'Tháng này' },
-  { value: 'year', label: 'Năm nay' }
-])
-
-const selectedStatus = ref('all')
-const selectedPeriod = ref('all')
+// Emits
+const emit = defineEmits<{
+  'go-back': []
+  'go-to-trip-detail': [trip: any]
+}>()
 
 // Sample trip history data
 const tripHistory = ref([
@@ -235,38 +167,7 @@ const tripHistory = ref([
   }
 ])
 
-// Computed properties
-const filteredHistory = computed(() => {
-  let filtered = tripHistory.value
-
-  // Filter by status
-  if (selectedStatus.value !== 'all') {
-    filtered = filtered.filter(trip => trip.status === selectedStatus.value)
-  }
-
-  // Filter by period (simplified for demo)
-  if (selectedPeriod.value !== 'all') {
-    // In real app, this would filter by actual dates
-    filtered = filtered.slice(0, 3) // Show only first 3 for demo
-  }
-
-  return filtered
-})
-
 // Methods
-const selectStatus = (status: string) => {
-  selectedStatus.value = status
-}
-
-const selectPeriod = (period: string) => {
-  selectedPeriod.value = period
-}
-
-const clearFilters = () => {
-  selectedStatus.value = 'all'
-  selectedPeriod.value = 'all'
-}
-
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -299,17 +200,6 @@ const getStatusText = (status: string) => {
       return 'Không xác định'
   }
 }
-
-const goBack = () => {
-  router.back()
-}
-
-const goToTripDetail = (trip: any) => {
-  router.push({
-    path: '/trip-detail',
-    query: { id: trip.id, from: 'history' }
-  })
-}
 </script>
 
 <style scoped>
@@ -333,34 +223,6 @@ const goToTripDetail = (trip: any) => {
 
 .header-top h1 {
   color: #424242;
-}
-
-.filter-section {
-  background: #f8f9fa;
-}
-
-.filter-card {
-  transition: all 0.3s ease;
-}
-
-.filter-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
-}
-
-.filter-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.filter-chip {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-chip:hover {
-  transform: translateY(-1px);
 }
 
 .history-section {

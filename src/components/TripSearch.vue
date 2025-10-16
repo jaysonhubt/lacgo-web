@@ -25,7 +25,7 @@
               color="green-lighten-1"
               variant="elevated"
               rounded="lg"
-              @click="goToHistory"
+              @click="$emit('go-to-history')"
             >
               <v-icon start>mdi-history</v-icon>
               Lịch sử
@@ -55,15 +55,42 @@
             </v-chip>
           </div>
 
+          <!-- Searching State -->
+          <div v-if="isSearching" class="searching-state pa-8">
+            <div class="text-center">
+              <v-progress-circular
+                :model-value="searchProgress"
+                color="green-lighten-1"
+                size="64"
+                width="6"
+                class="mb-4"
+              ></v-progress-circular>
+              <h3 class="text-h6 text-grey-darken-1 mb-2">Đang tìm kiếm chuyến xe...</h3>
+              <p class="text-body-2 text-grey-darken-1 mb-4">
+                Hệ thống đang tìm kiếm các chuyến xe phù hợp với yêu cầu của bạn
+              </p>
+              <div class="searching-details">
+                <div class="d-flex align-center justify-center mb-2">
+                  <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-map-marker</v-icon>
+                  <span class="text-body-2">{{ searchData.from }} → {{ searchData.to }}</span>
+                </div>
+                <div class="d-flex align-center justify-center">
+                  <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-clock-outline</v-icon>
+                  <span class="text-body-2">{{ searchData.dateTime }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Trip List -->
-          <div class="trip-list">
+          <div v-else class="trip-list">
             <v-card
               v-for="trip in filteredTrips"
               :key="trip.id"
               class="trip-item mb-3"
               elevation="1"
               rounded="lg"
-              @click="goToTripDetail(trip)"
+              @click="$emit('go-to-trip-detail', trip)"
             >
               <v-card-text class="pa-4">
                 <div class="d-flex align-center justify-space-between">
@@ -146,18 +173,29 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const route = useRoute()
 
-// Search data from previous screen
-const searchData = ref({
-  from: 'Hà Nội',
-  to: 'Hồ Chí Minh',
-  dateTime: 'Hôm nay, 14:30',
-  service: '1'
-})
+// Props
+const props = defineProps<{
+  searchData: {
+    from: string
+    to: string
+    dateTime: string
+    service: string
+  }
+}>()
+
+// Emits
+const emit = defineEmits<{
+  'go-to-history': []
+  'go-to-trip-detail': [trip: any]
+}>()
+
+// Searching state
+const isSearching = ref(false)
+const searchProgress = ref(0)
 
 // Filter options
 const filters = ref([
@@ -222,8 +260,8 @@ const filteredTrips = computed(() => {
   let filtered = trips.value
 
   // Filter by service type
-  if (searchData.value.service !== 'all') {
-    filtered = filtered.filter(trip => trip.service === searchData.value.service)
+  if (props.searchData.service !== 'all') {
+    filtered = filtered.filter(trip => trip.service === props.searchData.service)
   }
 
   // Apply selected filter
@@ -254,42 +292,31 @@ const formatPrice = (price: number) => {
   }).format(price)
 }
 
-const goToHistory = () => {
-  router.push('/trip-history')
-}
-
 const goToHome = () => {
   router.push('/')
 }
 
-const goToTripDetail = (trip: any) => {
-  router.push({
-    path: '/trip-detail',
-    query: { id: trip.id }
-  })
+// Simulate backend search
+const simulateSearch = () => {
+  isSearching.value = true
+  searchProgress.value = 0
+  
+  const interval = setInterval(() => {
+    searchProgress.value += 10
+    if (searchProgress.value >= 100) {
+      clearInterval(interval)
+      setTimeout(() => {
+        isSearching.value = false
+        searchProgress.value = 0
+      }, 500)
+    }
+  }, 200)
 }
 
-// Load search data from route params or localStorage
+// Start searching if we have search data
 onMounted(() => {
-  // Load search data from query parameters
-  if (route.query.from) {
-    searchData.value.from = route.query.from as string
-  }
-  if (route.query.to) {
-    searchData.value.to = route.query.to as string
-  }
-  if (route.query.dateTime) {
-    searchData.value.dateTime = route.query.dateTime as string
-  }
-  if (route.query.service) {
-    searchData.value.service = route.query.service as string
-  }
-  
-  // If no search data, show default message
-  if (!route.query.from && !route.query.to) {
-    searchData.value.from = ''
-    searchData.value.to = ''
-    searchData.value.dateTime = ''
+  if (props.searchData.from && props.searchData.to) {
+    simulateSearch()
   }
 })
 </script>
@@ -315,10 +342,6 @@ onMounted(() => {
 
 .trip-info-section h1 {
   color: #424242;
-}
-
-.history-section {
-  /* Remove background styling */
 }
 
 .results-section {

@@ -9,7 +9,7 @@
             variant="text"
             color="grey-darken-2"
             class="mr-3"
-            @click="goBack"
+            @click="$emit('go-back')"
           ></v-btn>
           <div>
             <h1 class="text-h5 font-weight-bold text-grey-darken-2">
@@ -228,10 +228,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 
-const router = useRouter()
-const route = useRoute()
+// Props
+const props = defineProps<{
+  tripId: string
+  fromHistory: boolean
+}>()
+
+// Emits
+const emit = defineEmits<{
+  'go-back': []
+}>()
 
 // Trip data
 const tripData = ref({
@@ -287,23 +294,19 @@ const formatPrice = (price: number) => {
   }).format(price)
 }
 
-const goBack = () => {
-  router.back()
-}
-
 const bookTrip = () => {
   // TODO: Implement booking logic
   console.log('Booking trip:', tripData.value.id)
   // This could show a booking confirmation dialog or navigate to payment
 }
 
-// Load trip data based on route params
+// Load trip data based on props
 onMounted(() => {
-  const tripId = route.query.id
-  const fromHistory = route.query.from === 'history'
+  // Scroll to top
+  window.scrollTo(0, 0)
   
   // In real app, fetch trip data from API based on tripId
-  console.log('Loading trip detail for ID:', tripId, 'From history:', fromHistory)
+  console.log('Loading trip detail for ID:', props.tripId, 'From history:', props.fromHistory)
 })
 </script>
 
