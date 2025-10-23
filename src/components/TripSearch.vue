@@ -1,191 +1,212 @@
 <template>
-  <v-container fluid class="trip-container pa-0">
-    <!-- Header Section -->
-    <div class="header-section pa-4">
+  <div class="trip-search-container">
+    <!-- Header -->
+    <div class="header">
       <div class="header-content">
-        <div class="header-top d-flex justify-space-between align-center mb-4">
-          <div class="trip-info-section">
-            <h1 class="text-h5 font-weight-bold text-grey-darken-2">
-              Chuyến xe
-            </h1>
-            <p v-if="searchData.from && searchData.to" class="text-body-2 text-grey-darken-1 font-weight-medium">
-              {{ searchData.from }} → {{ searchData.to }}
-            </p>
-            <p v-else class="text-body-2 text-grey-darken-1 font-weight-medium">
-              Tìm kiếm chuyến xe phù hợp
-            </p>
-            <p v-if="searchData.dateTime" class="text-caption text-grey-darken-1">
-              {{ searchData.dateTime }}
-            </p>
+        <div class="header-info">
+          <h1 class="title">Chuyến xe của bạn</h1>
+          <div class="route-info" v-if="searchData.from && searchData.to">
+            <v-icon color="white" size="20">mdi-map-marker</v-icon>
+            <span>{{ searchData.from }} → {{ searchData.to }}</span>
           </div>
-
-          <!-- History Button -->
-          <div class="history-section">
-            <v-btn
-              color="green-lighten-1"
-              variant="elevated"
-              rounded="lg"
-              @click="$emit('go-to-history')"
-            >
-              <v-icon start>mdi-history</v-icon>
-              Lịch sử
-            </v-btn>
+          <div class="time-info" v-if="searchData.dateTime">
+            <v-icon color="white" size="16">mdi-clock-outline</v-icon>
+            <span>{{ searchData.dateTime }}</span>
           </div>
         </div>
+        <v-btn
+          color="white"
+          variant="outlined"
+          @click="$emit('go-to-history')"
+          class="history-btn"
+        >
+          <v-icon start>mdi-history</v-icon>
+          Lịch sử
+        </v-btn>
       </div>
     </div>
 
-    <!-- Search Results Section -->
-    <div class="results-section pa-4">
-      <v-card class="results-card" elevation="2" rounded="xl">
-        <v-card-text class="pa-4">
-          <h3 class="text-h6 font-weight-bold mb-4">Kết quả tìm kiếm</h3>
-          
-          <!-- Filter Chips -->
-          <div class="filter-chips mb-4">
-            <v-chip
-              v-for="filter in filters"
-              :key="filter.value"
-              class="filter-chip mr-2 mb-2"
-              :color="selectedFilter === filter.value ? 'green-lighten-1' : 'grey-lighten-2'"
-              :variant="selectedFilter === filter.value ? 'flat' : 'outlined'"
-              @click="selectFilter(filter.value)"
+    <!-- Content -->
+    <div class="content">
+      <!-- Status Overview -->
+      <div class="status-overview">
+        <div class="status-card">
+          <div class="status-header">
+            <h3>Trạng thái chuyến xe</h3>
+            <v-chip 
+              :color="getStatusColor()"
+              variant="flat"
+              size="large"
             >
-              {{ filter.label }}
+              <v-icon start>{{ getStatusIcon() }}</v-icon>
+              {{ getStatusText() }}
             </v-chip>
           </div>
-
-          <!-- Searching State -->
-          <div v-if="isSearching" class="searching-state pa-8">
-            <div class="text-center">
-              <v-progress-circular
-                :model-value="searchProgress"
-                color="green-lighten-1"
-                size="64"
-                width="6"
-                class="mb-4"
-              ></v-progress-circular>
-              <h3 class="text-h6 text-grey-darken-1 mb-2">Đang tìm kiếm chuyến xe...</h3>
-              <p class="text-body-2 text-grey-darken-1 mb-4">
-                Hệ thống đang tìm kiếm các chuyến xe phù hợp với yêu cầu của bạn
-              </p>
-              <div class="searching-details">
-                <div class="d-flex align-center justify-center mb-2">
-                  <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-map-marker</v-icon>
-                  <span class="text-body-2">{{ searchData.from }} → {{ searchData.to }}</span>
-                </div>
-                <div class="d-flex align-center justify-center">
-                  <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-clock-outline</v-icon>
-                  <span class="text-body-2">{{ searchData.dateTime }}</span>
-                </div>
+          
+          <div class="trip-summary">
+            <div class="summary-item">
+              <v-icon color="green-lighten-1" size="24">mdi-car-seat</v-icon>
+              <div>
+                <div class="label">Dịch vụ</div>
+                <div class="value">{{ tripStore.getServiceLabel(searchData.service) }}</div>
+              </div>
+            </div>
+            <div class="summary-item">
+              <v-icon color="green-lighten-1" size="24">mdi-map-marker</v-icon>
+              <div>
+                <div class="label">Khoảng cách</div>
+                <div class="value">~15 km</div>
+              </div>
+            </div>
+            <div class="summary-item">
+              <v-icon color="green-lighten-1" size="24">mdi-clock-outline</v-icon>
+              <div>
+                <div class="label">Thời gian dự kiến</div>
+                <div class="value">~25 phút</div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- Trip List -->
-          <div v-else class="trip-list">
-            <v-card
-              v-for="trip in filteredTrips"
-              :key="trip.id"
-              class="trip-item mb-3"
-              elevation="1"
-              rounded="lg"
-              @click="$emit('go-to-trip-detail', trip)"
-            >
-              <v-card-text class="pa-4">
-                <div class="d-flex align-center justify-space-between">
-                  <div class="trip-info">
-                    <div class="d-flex align-center mb-2">
-                      <v-avatar size="40" color="green-lighten-1" class="mr-3">
-                        <v-icon color="white">mdi-car</v-icon>
-                      </v-avatar>
-                      <div>
-                        <h4 class="text-subtitle-1 font-weight-bold">{{ trip.driverName }}</h4>
-                        <p class="text-caption text-grey-darken-1">{{ trip.vehicleType }}</p>
-                      </div>
-                    </div>
-                    
-                    <div class="trip-details">
-                      <div class="d-flex align-center mb-1">
-                        <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-clock-outline</v-icon>
-                        <span class="text-body-2">{{ trip.departureTime }}</span>
-                      </div>
-                      <div class="d-flex align-center mb-1">
-                        <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-account-multiple</v-icon>
-                        <span class="text-body-2">{{ trip.availableSeats }} chỗ trống</span>
-                      </div>
-                      <div class="d-flex align-center">
-                        <v-icon size="16" color="green-lighten-1" class="mr-2">mdi-star</v-icon>
-                        <span class="text-body-2">{{ trip.rating }} ({{ trip.reviewCount }} đánh giá)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="trip-price text-right">
-                    <div class="text-h6 font-weight-bold text-green-lighten-1">
-                      {{ formatPrice(trip.price) }}
-                    </div>
-                    <v-btn
-                      color="green-lighten-1"
-                      variant="flat"
-                      size="small"
-                      rounded="lg"
-                    >
-                      Chọn
-                    </v-btn>
-                  </div>
-                </div>
-              </v-card-text>
-            </v-card>
+      <!-- Main Status Content -->
+      <div class="main-status">
+        <!-- Searching State -->
+        <div v-if="isSearching" class="searching-container">
+          <div class="searching-header">
+            <v-progress-circular
+              :model-value="searchProgress"
+              color="green-lighten-1"
+              size="120"
+              width="8"
+            ></v-progress-circular>
+            <div class="progress-text">
+              <h2>Đang tìm xe phù hợp</h2>
+              <p>Hệ thống đang tự động tìm kiếm chuyến xe tốt nhất cho bạn</p>
+            </div>
           </div>
+          
+          <div class="search-steps">
+            <div class="step" :class="{ completed: searchProgress >= 25 }">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Tìm kiếm</h4>
+                <p>Các chuyến xe khả dụng</p>
+              </div>
+            </div>
+            <div class="step" :class="{ completed: searchProgress >= 50 }">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Lọc</h4>
+                <p>Theo yêu cầu của bạn</p>
+              </div>
+            </div>
+            <div class="step" :class="{ completed: searchProgress >= 75 }">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Đánh giá</h4>
+                <p>Theo độ phù hợp</p>
+              </div>
+            </div>
+            <div class="step" :class="{ completed: searchProgress >= 100 }">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Kết nối</h4>
+                <p>Chuyến xe phù hợp nhất</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <!-- No Search Data -->
-          <div v-if="!searchData.from || !searchData.to" class="text-center pa-8">
-            <v-icon size="64" color="grey-lighten-2" class="mb-4">mdi-magnify</v-icon>
-            <h3 class="text-h6 text-grey-darken-1 mb-2">Chưa có thông tin tìm kiếm</h3>
-            <p class="text-body-2 text-grey-darken-1 mb-4">
-              Hãy quay lại trang chủ để tìm kiếm chuyến xe
-            </p>
+        <!-- Found State -->
+        <div v-else-if="searchCompleted" class="found-container">
+          <div class="success-header">
+            <v-icon size="80" color="green-lighten-1">mdi-check-circle</v-icon>
+            <h2>Đã tìm thấy chuyến xe!</h2>
+            <p>Hệ thống đã kết nối bạn với chuyến xe tốt nhất</p>
+          </div>
+          
+          <div class="driver-card">
+            <div class="driver-header">
+              <v-avatar size="60" color="green-lighten-1">
+                <v-icon color="white" size="30">mdi-car</v-icon>
+              </v-avatar>
+              <div class="driver-info">
+                <h3>{{ foundTrip?.driverName }}</h3>
+                <p>{{ foundTrip?.vehicleType }}</p>
+              </div>
+              <div class="price-info">
+                <div class="price">{{ formatPrice(foundTrip?.price || 0) }}</div>
+              </div>
+            </div>
+            
+            <div class="trip-details">
+              <div class="detail-row">
+                <v-icon color="green-lighten-1" size="20">mdi-clock-outline</v-icon>
+                <span>Khởi hành: {{ foundTrip?.departureTime }}</span>
+              </div>
+              <div class="detail-row">
+                <v-icon color="green-lighten-1" size="20">mdi-star</v-icon>
+                <span>{{ foundTrip?.rating }} ({{ foundTrip?.reviewCount }} đánh giá)</span>
+              </div>
+              <div class="detail-row">
+                <v-icon color="green-lighten-1" size="20">mdi-map-marker</v-icon>
+                <span>{{ foundTrip?.pickupLocation }}</span>
+              </div>
+            </div>
+            
             <v-btn
               color="green-lighten-1"
               variant="flat"
-              rounded="lg"
-              @click="goToHome"
+              size="large"
+              block
+              @click="$emit('go-to-trip-detail', foundTrip)"
+              class="action-btn"
             >
-              <v-icon start>mdi-home</v-icon>
-              Về trang chủ
+              Xem chi tiết chuyến xe
             </v-btn>
           </div>
-
-          <!-- No Results -->
-          <div v-else-if="filteredTrips.length === 0" class="text-center pa-8">
-            <v-icon size="64" color="grey-lighten-2" class="mb-4">mdi-car-off</v-icon>
-            <h3 class="text-h6 text-grey-darken-1 mb-2">Không tìm thấy chuyến xe</h3>
-            <p class="text-body-2 text-grey-darken-1">
-              Hãy thử thay đổi bộ lọc hoặc thời gian tìm kiếm
-            </p>
+          
+          <div class="note">
+            <v-icon color="green-lighten-1" size="16">mdi-information</v-icon>
+            <span>Chuyến xe đã được thêm vào lịch sử của bạn</span>
           </div>
-        </v-card-text>
-      </v-card>
+        </div>
+
+        <!-- Waiting State -->
+        <div v-else class="waiting-container">
+          <v-icon size="80" color="grey-lighten-2">mdi-clock-outline</v-icon>
+          <h2>Chờ bắt đầu tìm kiếm</h2>
+          <p>Hệ thống sẽ bắt đầu tìm kiếm chuyến xe phù hợp</p>
+        </div>
+
+        <!-- No Data State -->
+        <div v-if="!tripStore.hasSearchData" class="no-data-container">
+          <v-icon size="80" color="grey-lighten-2">mdi-magnify</v-icon>
+          <h2>Chưa có thông tin tìm kiếm</h2>
+          <p>Hãy quay lại trang chủ để tìm kiếm chuyến xe</p>
+          <v-btn
+            color="green-lighten-1"
+            variant="flat"
+            @click="goToHome"
+            class="home-btn"
+          >
+            <v-icon start>mdi-home</v-icon>
+            Về trang chủ
+          </v-btn>
+        </div>
+      </div>
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTripStore } from '@/stores/trip'
 
 const router = useRouter()
-
-// Props
-const props = defineProps<{
-  searchData: {
-    from: string
-    to: string
-    dateTime: string
-    service: string
-  }
-}>()
+const tripStore = useTripStore()
 
 // Emits
 const emit = defineEmits<{
@@ -193,97 +214,12 @@ const emit = defineEmits<{
   'go-to-trip-detail': [trip: any]
 }>()
 
-// Searching state
-const isSearching = ref(false)
-const searchProgress = ref(0)
-
-// Filter options
-const filters = ref([
-  { value: 'all', label: 'Tất cả' },
-  { value: 'price', label: 'Giá thấp' },
-  { value: 'time', label: 'Thời gian' },
-  { value: 'rating', label: 'Đánh giá cao' }
-])
-
-const selectedFilter = ref('all')
-
-// Sample trip data
-const trips = ref([
-  {
-    id: 1,
-    driverName: 'Nguyễn Văn A',
-    vehicleType: 'Xe 4 chỗ',
-    departureTime: '14:30',
-    availableSeats: 2,
-    rating: 4.8,
-    reviewCount: 156,
-    price: 250000,
-    service: '1'
-  },
-  {
-    id: 2,
-    driverName: 'Trần Thị B',
-    vehicleType: 'Xe 7 chỗ',
-    departureTime: '15:00',
-    availableSeats: 4,
-    rating: 4.6,
-    reviewCount: 89,
-    price: 300000,
-    service: '2'
-  },
-  {
-    id: 3,
-    driverName: 'Lê Văn C',
-    vehicleType: 'Xe 16 chỗ',
-    departureTime: '16:15',
-    availableSeats: 8,
-    rating: 4.9,
-    reviewCount: 203,
-    price: 180000,
-    service: 'back'
-  },
-  {
-    id: 4,
-    driverName: 'Phạm Thị D',
-    vehicleType: 'Xe 4 chỗ',
-    departureTime: '17:30',
-    availableSeats: 1,
-    rating: 4.7,
-    reviewCount: 134,
-    price: 280000,
-    service: '1'
-  }
-])
-
 // Computed properties
-const filteredTrips = computed(() => {
-  let filtered = trips.value
-
-  // Filter by service type
-  if (props.searchData.service !== 'all') {
-    filtered = filtered.filter(trip => trip.service === props.searchData.service)
-  }
-
-  // Apply selected filter
-  switch (selectedFilter.value) {
-    case 'price':
-      filtered = filtered.sort((a, b) => a.price - b.price)
-      break
-    case 'time':
-      filtered = filtered.sort((a, b) => a.departureTime.localeCompare(b.departureTime))
-      break
-    case 'rating':
-      filtered = filtered.sort((a, b) => b.rating - a.rating)
-      break
-  }
-
-  return filtered
-})
-
-// Methods
-const selectFilter = (filterValue: string) => {
-  selectedFilter.value = filterValue
-}
+const searchData = computed(() => tripStore.searchData)
+const isSearching = computed(() => tripStore.isSearching)
+const searchProgress = computed(() => tripStore.searchProgress)
+const searchCompleted = computed(() => tripStore.currentTrip !== null)
+const foundTrip = computed(() => tripStore.currentTrip)
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', {
@@ -296,18 +232,46 @@ const goToHome = () => {
   router.push('/')
 }
 
+// Helper functions for status
+const getStatusColor = () => {
+  if (isSearching.value) return 'orange-lighten-1'
+  if (searchCompleted.value) return 'green-lighten-1'
+  return 'grey-lighten-2'
+}
+
+const getStatusIcon = () => {
+  if (isSearching.value) return 'mdi-clock-outline'
+  if (searchCompleted.value) return 'mdi-check-circle'
+  return 'mdi-help-circle'
+}
+
+const getStatusText = () => {
+  if (isSearching.value) return 'Đang tìm xe'
+  if (searchCompleted.value) return 'Đã tìm thấy'
+  return 'Chờ tìm kiếm'
+}
+
 // Simulate backend search
 const simulateSearch = () => {
-  isSearching.value = true
-  searchProgress.value = 0
+  tripStore.startSearch()
   
   const interval = setInterval(() => {
-    searchProgress.value += 10
-    if (searchProgress.value >= 100) {
+    tripStore.updateSearchProgress(tripStore.searchProgress + 10)
+    if (tripStore.searchProgress >= 100) {
       clearInterval(interval)
       setTimeout(() => {
-        isSearching.value = false
-        searchProgress.value = 0
+        const trip = {
+          id: 1,
+          driverName: 'Nguyễn Văn A',
+          vehicleType: 'Xe 4 chỗ',
+          departureTime: '14:30',
+          rating: 4.8,
+          reviewCount: 156,
+          price: 250000,
+          pickupLocation: 'Điểm đón gần nhất',
+          status: 'found' as const
+        }
+        tripStore.completeSearch(trip)
       }, 500)
     }
   }, 200)
@@ -315,85 +279,395 @@ const simulateSearch = () => {
 
 // Start searching if we have search data
 onMounted(() => {
-  if (props.searchData.from && props.searchData.to) {
+  if (tripStore.hasSearchData) {
     simulateSearch()
   }
 })
 </script>
 
 <style scoped>
-.trip-container {
+.trip-search-container {
   min-height: 100vh;
-  padding-bottom: 80px; /* Account for bottom navigation */
+  background: #f5f7fa;
+  padding-bottom: 80px;
 }
 
-.header-section {
-  background: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+/* Header */
+.header {
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+  padding: 20px;
+  color: white;
 }
 
 .header-content {
-  padding-top: 60px; /* Account for app bar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 60px;
 }
 
-.header-top {
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.history-btn {
   flex-shrink: 0;
 }
 
-.trip-info-section h1 {
+/* Content */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Status Overview */
+.status-overview {
+  margin-bottom: 24px;
+}
+
+.status-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8f5e8;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.status-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #424242;
+  margin: 0;
+}
+
+.trip-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.summary-item .label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.summary-item .value {
+  font-size: 1rem;
+  font-weight: 600;
   color: #424242;
 }
 
-.results-section {
-  background: #f8f9fa;
+/* Main Status */
+.main-status {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8f5e8;
 }
 
-.results-card {
-  transition: all 0.3s ease;
+/* Searching State */
+.searching-container {
+  text-align: center;
 }
 
-.results-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
-}
-
-.filter-chips {
+.searching-header {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
-  gap: 8px;
 }
 
-.filter-chip {
-  cursor: pointer;
+.progress-text h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #424242;
+  margin: 0 0 8px 0;
+}
+
+.progress-text p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.search-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid transparent;
   transition: all 0.3s ease;
 }
 
-.filter-chip:hover {
-  transform: translateY(-1px);
-}
-
-.trip-item {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.trip-item:hover {
+.step.completed {
+  background: #e8f5e8;
+  border-color: #4caf50;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.15);
 }
 
-.trip-info {
-  flex: 1;
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #4caf50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.step:not(.completed) .step-number {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.step-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #424242;
+  margin: 0 0 4px 0;
+}
+
+.step-content p {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Found State */
+.found-container {
+  text-align: center;
+}
+
+.success-header {
+  margin-bottom: 32px;
+}
+
+.success-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #424242;
+  margin: 16px 0 8px 0;
+}
+
+.success-header p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.driver-card {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 24px;
+  border: 2px solid #e8f5e8;
+  margin-bottom: 24px;
+}
+
+.driver-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.driver-info h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #424242;
+  margin: 0 0 4px 0;
+}
+
+.driver-info p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.price-info {
+  margin-left: auto;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4caf50;
 }
 
 .trip-details {
-  margin-left: 52px;
-}
-
-.trip-price {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #424242;
+}
+
+.action-btn {
+  margin-top: 16px;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Waiting & No Data States */
+.waiting-container,
+.no-data-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.waiting-container h2,
+.no-data-container h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #424242;
+  margin: 16px 0 8px 0;
+}
+
+.waiting-container p,
+.no-data-container p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 24px 0;
+}
+
+.home-btn {
+  margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .status-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .trip-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .searching-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .search-steps {
+    grid-template-columns: 1fr;
+  }
+  
+  .driver-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .price-info {
+    margin-left: 0;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .main-status {
+    padding: 24px;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 16px;
+  }
+  
+  .content {
+    padding: 12px;
+  }
+  
+  .main-status {
+    padding: 20px;
+  }
+  
+  .status-card {
+    padding: 20px;
+  }
 }
 </style>

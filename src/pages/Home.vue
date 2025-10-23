@@ -458,6 +458,7 @@
 import {ref, computed, nextTick, onMounted, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import {useAuthStore} from '@/stores/auth'
+import {useTripStore} from '@/stores/trip'
 import {
   getCurrentDate,
   getDateRange,
@@ -471,6 +472,7 @@ import { DATE_TIME_CONFIG } from '@/config/dateTime'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const tripStore = useTripStore()
 const user = computed(() => authStore.user)
 
 // Location states
@@ -487,7 +489,7 @@ const fromLocationSuggestions = ref([])
 const toLocationSuggestions = ref([])
 
 // Service states
-const selectedService = ref('1')
+const selectedService = ref('0')
 
 // All service options
 const allServiceOptions = ref([
@@ -824,16 +826,11 @@ const searchVehicles = () => {
 
   console.log('Searching vehicles with data:', searchData)
 
-  // Navigate to trips page with search data
-  router.push({
-    path: '/trips',
-    query: {
-      from: searchData.from,
-      to: searchData.to,
-      dateTime: searchData.dateTime,
-      service: searchData.service
-    }
-  })
+  // Save search data to store
+  tripStore.setSearchData(searchData)
+
+  // Navigate to trips page
+  router.push('/trips')
 }
 
 const departNow = () => {
