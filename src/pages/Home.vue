@@ -40,7 +40,7 @@
     </div>
 
     <!-- Search Input Section -->
-    <div class="search-section pa-4 py-2">
+    <div class="search-section pa-4 py-4">
       <v-card
         class="search-card"
         elevation="2"
@@ -904,7 +904,7 @@ onMounted(() => {
 
 <style scoped>
 .booking-container {
-  min-height: 100vh;
+  /*min-height: 100vh;*/
 }
 
 .header-section {

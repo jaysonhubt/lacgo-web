@@ -5,7 +5,6 @@
       <div class="header-content">
         <div class="header-info">
           <h1 class="title">Chuyến xe của bạn</h1>
-          <p class="subtitle">Theo dõi chuyến đi đang hoạt động</p>
         </div>
         <v-btn
           color="white"
@@ -303,7 +302,7 @@ onMounted(() => {
   align-items: flex-start;
   max-width: 1200px;
   margin: 0 auto;
-  padding-top: 60px;
+  padding-top: 20px;
 }
 
 .header-info {
@@ -315,13 +314,6 @@ onMounted(() => {
   font-weight: 700;
   margin: 0 0 6px 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  margin: 0;
-  opacity: 0.9;
-  font-weight: 400;
 }
 
 .history-btn {
@@ -499,10 +491,6 @@ onMounted(() => {
   margin: 0 0 24px 0;
 }
 
-.home-btn {
-  margin-top: 16px;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .header-content {
@@ -533,7 +521,7 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .header {
-    padding: 16px;
+    padding: 16px 16px 5px;
   }
 
   .content {

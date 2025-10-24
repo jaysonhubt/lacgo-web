@@ -30,5 +30,6 @@
 .main {
   max-height: calc(100dvh - 56px);
   overflow: scroll;
+  padding-bottom: 0;
 }
 </style>
