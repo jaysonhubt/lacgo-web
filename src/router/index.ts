@@ -14,7 +14,19 @@ import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Use saved position for browser back/forward
+    if (savedPosition) {
+      return savedPosition
+    }
+    // Scroll to hash anchor if present
+    if (to.hash) {
+      return { el: to.hash }
+    }
+    // Default: scroll to top on navigation
+    return { top: 0 }
+  }
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

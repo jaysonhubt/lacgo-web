@@ -150,7 +150,7 @@ const openSearch = () => {
 <style scoped>
 .messages-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
   padding-bottom: 80px;
 }
 
@@ -166,7 +166,6 @@ const openSearch = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 60px;
 }
 
 .title {

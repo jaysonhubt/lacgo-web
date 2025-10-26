@@ -64,11 +64,11 @@
             <div class="voucher-badge" :class="voucher.type">
               <v-icon size="20">{{ getVoucherIcon(voucher.type) }}</v-icon>
             </div>
-            
+
             <div class="voucher-content">
               <h3 class="voucher-title">{{ voucher.title }}</h3>
               <p class="voucher-desc">{{ voucher.description }}</p>
-              
+
               <div class="voucher-footer">
                 <div class="voucher-value">
                   <span class="discount">{{ voucher.discount }}</span>
@@ -99,11 +99,11 @@
               ></v-img>
               <v-icon v-else size="60" color="green-lighten-1">mdi-gift</v-icon>
             </div>
-            
+
             <div class="reward-info">
               <h3 class="reward-title">{{ reward.title }}</h3>
               <p class="reward-desc">{{ reward.description }}</p>
-              
+
               <div class="reward-points">
                 <v-icon size="16" color="green-lighten-1">mdi-leaf</v-icon>
                 <span class="points">{{ reward.points }} điểm</span>
@@ -130,7 +130,7 @@
                 <p class="voucher-code">{{ voucher.code }}</p>
               </div>
             </div>
-            
+
             <div class="voucher-right">
               <span class="voucher-discount-sm">{{ voucher.discount }}</span>
               <v-chip
@@ -331,7 +331,6 @@ const useVoucher = (voucher: any) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 60px;
 }
 
 .title {

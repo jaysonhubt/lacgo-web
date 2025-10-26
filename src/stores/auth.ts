@@ -139,15 +139,12 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
 
     try {
-      // Call logout API to invalidate token on server
       await api.post('/logout')
-    } catch (err) {
-      // Even if API fails, continue with local logout
-      console.warn('Logout API failed, but continuing with local logout:', err)
+      console.log('Logout API succeeded')
+    } catch (err: any) {
+      console.warn('Logout API failed, but continuing with local logout:', err?.message || err)
     } finally {
-      // Always clear local auth data
       clearAuth()
-      console.log(147)
       isLoading.value = false
       return { success: true }
     }

@@ -7,7 +7,7 @@
           <v-img v-if="user?.avatar" :src="user.avatar"></v-img>
           <v-icon v-else color="green-lighten-1" size="40">mdi-account</v-icon>
         </v-avatar>
-        
+
         <div class="profile-info">
           <h2 class="user-name">{{ user?.name || 'Người dùng' }}</h2>
           <p class="user-phone">{{ user?.phone || '0123456789' }}</p>
@@ -27,24 +27,21 @@
       <!-- Stats -->
       <div class="stats-grid">
         <div class="stat-item" @click="goToPointsHistory">
-          <v-icon color="white" size="24">mdi-leaf</v-icon>
+          <v-icon color="white" size="20">mdi-leaf</v-icon>
           <div class="stat-info">
-            <span class="stat-value">{{ user?.points || 0 }}</span>
-            <span class="stat-label">Điểm</span>
+            <span class="stat-value">{{ user?.points || 0 }} Điểm</span>
           </div>
         </div>
         <div class="stat-item" @click="goToVouchers">
-          <v-icon color="white" size="24">mdi-ticket</v-icon>
+          <v-icon color="white" size="20">mdi-ticket</v-icon>
           <div class="stat-info">
-            <span class="stat-value">{{ voucherCount }}</span>
-            <span class="stat-label">Voucher</span>
+            <span class="stat-value">{{ voucherCount }} Voucher</span>
           </div>
         </div>
         <div class="stat-item" @click="goToTripHistory">
-          <v-icon color="white" size="24">mdi-car</v-icon>
+          <v-icon color="white" size="20">mdi-car</v-icon>
           <div class="stat-info">
-            <span class="stat-value">{{ tripCount }}</span>
-            <span class="stat-label">Chuyến đi</span>
+            <span class="stat-value">{{ tripCount }} Chuyến đi</span>
           </div>
         </div>
       </div>
@@ -116,12 +113,55 @@
           variant="outlined"
           size="large"
           block
-          @click="logout"
+          @click="confirmLogout"
+          :loading="isLoggingOut"
+          :disabled="isLoggingOut"
         >
           <v-icon start>mdi-logout</v-icon>
           Đăng xuất
         </v-btn>
       </div>
+
+      <!-- Logout Confirmation Dialog -->
+      <v-dialog v-model="showLogoutDialog" max-width="400">
+        <v-card rounded="xl">
+          <v-card-title class="text-h6 pa-6">
+            Xác nhận đăng xuất
+          </v-card-title>
+          <v-card-text class="px-6 pb-4">
+            Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?
+          </v-card-text>
+          <v-card-actions class="px-6 pb-6">
+            <v-spacer></v-spacer>
+            <v-btn
+              variant="text"
+              @click="showLogoutDialog = false"
+              :disabled="isLoggingOut"
+            >
+              Hủy
+            </v-btn>
+            <v-btn
+              color="red-lighten-1"
+              variant="flat"
+              @click="handleLogout"
+              :loading="isLoggingOut"
+              :disabled="isLoggingOut"
+            >
+              Đăng xuất
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Snackbar for notifications -->
+      <v-snackbar
+        v-model="showSnackbar"
+        :timeout="3000"
+        :color="snackbarColor"
+        location="top"
+      >
+        {{ snackbarMessage }}
+      </v-snackbar>
 
       <!-- App Version -->
       <div class="app-version">
@@ -143,6 +183,15 @@ const authStore = useAuthStore()
 const user = computed(() => authStore.user)
 const voucherCount = ref(3)
 const tripCount = ref(12)
+
+// Logout state
+const showLogoutDialog = ref(false)
+const isLoggingOut = ref(false)
+
+// Snackbar state
+const showSnackbar = ref(false)
+const snackbarMessage = ref('')
+const snackbarColor = ref('success')
 
 // Menu Items
 const accountMenuItems = ref([
@@ -284,9 +333,42 @@ const goToSettings = () => {
   router.push('/account/settings')
 }
 
-const logout = async () => {
-  await authStore.logout()
-  router.push('/login')
+const confirmLogout = () => {
+  showLogoutDialog.value = true
+}
+
+const handleLogout = async () => {
+  isLoggingOut.value = true
+
+  try {
+    // Logout always succeeds locally even if API fails
+    await authStore.logout()
+
+    showLogoutDialog.value = false
+    snackbarMessage.value = 'Đăng xuất thành công'
+    snackbarColor.value = 'success'
+    showSnackbar.value = true
+
+    // Redirect to login after a short delay
+    setTimeout(() => {
+      router.push('/login')
+    }, 500)
+  } catch (error) {
+    // This should rarely happen, but handle it gracefully
+    console.error('Logout error:', error)
+
+    // Still redirect to login even if there's an unexpected error
+    showLogoutDialog.value = false
+    snackbarMessage.value = 'Đăng xuất thành công'
+    snackbarColor.value = 'success'
+    showSnackbar.value = true
+
+    setTimeout(() => {
+      router.push('/login')
+    }, 500)
+  } finally {
+    isLoggingOut.value = false
+  }
 }
 </script>
 
@@ -309,7 +391,6 @@ const logout = async () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding-top: 60px;
   margin-bottom: 24px;
 }
 
@@ -388,7 +469,7 @@ const logout = async () => {
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1;
   margin-bottom: 2px;
@@ -510,7 +591,7 @@ const logout = async () => {
   }
 
   .stat-value {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 
   .stat-label {

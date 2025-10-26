@@ -3,7 +3,7 @@
     <v-main class="main">
       <slot />
     </v-main>
-    <v-bottom-navigation app>
+    <v-bottom-navigation app class="bottom-nav">
       <v-btn to="/" :value="'home'">
         <v-icon icon="mdi-home-outline"></v-icon>
       </v-btn>
@@ -28,8 +28,15 @@
 </script>
 <style scoped>
 .main {
-  max-height: calc(100dvh - 56px);
-  overflow: scroll;
-  padding-bottom: 0;
+  min-height: calc(100dvh - 56px);
+  padding-bottom: 56px; /* Space for bottom nav */
+}
+
+.bottom-nav {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000;
 }
 </style>

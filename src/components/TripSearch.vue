@@ -3,14 +3,11 @@
     <!-- Header -->
     <div class="header">
       <div class="header-content">
-        <div class="header-info">
-          <h1 class="title">Chuyến xe của bạn</h1>
-        </div>
+        <h1 class="title">Chuyến xe của bạn</h1>
         <v-btn
           color="white"
           variant="text"
           @click="$emit('go-to-history')"
-          class="history-btn"
           icon
         >
           <v-icon>mdi-history</v-icon>
@@ -299,28 +296,14 @@ onMounted(() => {
 .header-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 20px;
-}
-
-.header-info {
-  flex: 1;
+  align-items: center;
 }
 
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 0 0 6px 0;
+  margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.history-btn {
-  flex-shrink: 0;
-  min-width: 40px;
-  width: 40px;
-  height: 40px;
 }
 
 /* Content */
@@ -467,8 +450,7 @@ onMounted(() => {
 }
 
 /* No Trips & No Data States */
-.no-trips,
-.no-data {
+.no-trips {
   text-align: center;
   padding: 80px 20px;
   background: white;
@@ -491,37 +473,13 @@ onMounted(() => {
   margin: 0 0 24px 0;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .trips-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .content {
+@media (max-width: 480px) {
+  .header {
     padding: 16px;
   }
 
   .title {
     font-size: 1.5rem;
-  }
-
-  .subtitle {
-    font-size: 0.875rem;
-  }
-
-  .info-section {
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 16px 16px 5px;
   }
 
   .content {
