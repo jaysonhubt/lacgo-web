@@ -493,7 +493,6 @@ const useVoucher = (voucher: any) => {
 .voucher-badge.discount {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
 }
-
 .voucher-badge.percent {
   background: linear-gradient(135deg, #4c6ef5 0%, #748ffc 100%);
 }
