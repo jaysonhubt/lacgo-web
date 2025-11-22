@@ -11,9 +11,11 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: s3
     env:
       BUCKET: ${{ secrets.S3_BUCKET }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,6 +58,6 @@ jobs:
             --cache-control "public, max-age=31536000, immutable" lacgo-web/dist/ s3://$BUCKET/ --acl public-read --region $AWS_REGION
 
       - name: CloudFront invalidation (optional)
-        if: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID != '' }}
+        if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
