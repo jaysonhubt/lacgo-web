@@ -55,7 +55,7 @@
           <router-link
             variant="text"
             color="green-lighten-1"
-            :to="{name: 'ForgotPassword'}"
+            :to="{path: '/forgot-password'}"
             class="ml-2 text-body-1 text-decoration-none text-green-lighten-1 font-weight-bold"
           >
             Quên mật khẩu?
@@ -84,7 +84,7 @@
         <router-link
           variant="text"
           color="green-lighten-1"
-          :to="{name: 'Register'}"
+          :to="{path: '/register'}"
           class="ml-2 text-decoration-none text-green-lighten-1 font-weight-bold"
         >
           Tạo tài khoản

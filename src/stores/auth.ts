@@ -15,6 +15,7 @@ export interface User {
   type?: string
   is_active: boolean
   points?: number
+  avatar?: string
   created_at?: string
   updated_at?: string
 }

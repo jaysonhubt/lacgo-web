@@ -18,7 +18,7 @@ export const authGuard = async (
   } else {
     // User is not authenticated, redirect to login
     next({
-      name: 'Login',
+      path: '/login',
       query: { redirect: to.fullPath }
     })
   }
@@ -59,7 +59,7 @@ export const adminGuard = async (
   if (!isAuthenticated) {
     // User is not authenticated, redirect to login
     next({
-      name: 'Login',
+      path: '/login',
       query: { redirect: to.fullPath }
     })
     return
@@ -67,11 +67,11 @@ export const adminGuard = async (
 
   // Check if user is admin (you can add role checking here)
   const user = authStore.user
-  if (user && user.id === 'admin') {
-    // User is admin, allow access
+  if (user && user.type === '5') {
+    // User is admin (type=5), allow access
     next()
   } else {
     // User is not admin, redirect to home or show error
-    next({ name: 'Home' })
+    next({ path: '/' })
   }
 }

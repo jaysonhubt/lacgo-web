@@ -74,7 +74,7 @@
         <router-link
           variant="text"
           color="green-lighten-1"
-          :to="{name: 'Login'}"
+          :to="{path: '/login'}"
           class="ml-2 text-body-1 text-decoration-none text-green-lighten-1 font-weight-bold"
         >
           Quay lại đăng nhập

@@ -167,7 +167,7 @@
                   hide-details
                   color="green-lighten-1"
                   @click="openLocationPicker('from')"
-                  @input="(event) => searchFromLocation(event.target.value)"
+                  @input="(event: any) => searchFromLocation((event.target as HTMLInputElement).value)"
                 >
                   <template v-slot:append-inner>
                     <v-btn
@@ -194,7 +194,7 @@
                   hide-details
                   color="green-lighten-1"
                   @click="openLocationPicker('to')"
-                  @input="(event) => searchToLocation(event.target.value)"
+                  @input="(event: any) => searchToLocation((event.target as HTMLInputElement).value)"
                 >
                   <template v-slot:append-inner>
                     <v-btn
@@ -422,8 +422,8 @@
               v-for="time in quickTimes"
               :key="time.value"
               class="time-chip"
-              :color="selectedTime === getTimeInMinutes(time.value) ? 'green-lighten-1' : 'grey-darken-1'"
-              :variant="selectedTime === getTimeInMinutes(time.value) ? 'flat' : 'outlined'"
+              :color="typeof time.value === 'number' && selectedTime === getTimeInMinutes(time.value) ? 'green-lighten-1' : 'grey-darken-1'"
+              :variant="typeof time.value === 'number' && selectedTime === getTimeInMinutes(time.value) ? 'flat' : 'outlined'"
               @click="selectQuickTime(time.value)"
             >
               {{ time.label }}
@@ -541,7 +541,7 @@ const recentLocations = ref([
 const quickTimes = ref(
   DATE_TIME_CONFIG.QUICK_TIME_OPTIONS.map(option => ({
     ...option,
-    value: option.isAction ? 'now' : option.minutes
+    value: option.minutes
   }))
 )
 

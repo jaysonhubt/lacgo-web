@@ -93,7 +93,5 @@ export const useTripStore = defineStore('trip', {
     }
   },
 
-  persist: {
-    paths: ['searchData', 'tripHistory']
-  }
+  persist: true
 })

@@ -132,6 +132,7 @@ const emit = defineEmits<{
 
 // Computed properties
 const isSearching = computed(() => tripStore.isSearching)
+const hasSearchData = computed(() => tripStore.hasSearchData)
 
 // Sample trips data - only active trips (not completed)
 const trips = ref([
@@ -272,7 +273,7 @@ const simulateSearch = () => {
 
 // Start searching if we have search data
 onMounted(() => {
-  if (tripStore.hasSearchData) {
+  if (hasSearchData.value) {
     simulateSearch()
   }
 })
