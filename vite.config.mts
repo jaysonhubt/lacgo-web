@@ -56,6 +56,10 @@ export default defineConfig({
           },
         ],
       },
+      custom: {
+        families: [],
+        preload: false
+      }
     }),
   ],
   optimizeDeps: {
