@@ -48,95 +48,42 @@ jobs:
             exit 1
           fi
 
-      - name: Compress HTML files
+      - name: Deploy to S3 with correct MIME types and caching
         run: |
-          # Compress all HTML files with gzip
+          # Upload HTML (compressed with gzip)
           find dist -name "*.html" -type f -exec gzip -fk {} \;
-
-      - name: Upload compressed HTML files with metadata
-        run: |
-          # Upload .html.gz files as .html with gzip encoding
           find dist -name "*.html.gz" -type f | while read gzfile; do
             htmlfile="${gzfile%.gz}"
             s3key="${htmlfile#dist/}"
-            
-            # Determine cache-control based on filename
-            if [[ "$s3key" == "index.html" ]]; then
-              CACHE_CONTROL="no-cache, no-store, must-revalidate"
-            else
-              CACHE_CONTROL="public, max-age=3600"
-            fi
-            
+            cache="no-cache, no-store, must-revalidate"
+            [[ "$s3key" != "index.html" ]] && cache="public, max-age=3600"
             aws s3 cp "$gzfile" "s3://$BUCKET/$s3key" \
               --content-type "text/html; charset=utf-8" \
               --content-encoding gzip \
-              --cache-control "$CACHE_CONTROL" \
-              --metadata-directive REPLACE \
+              --cache-control "$cache" \
               --region $AWS_REGION
           done
-
-      - name: Sync remaining files to S3
-        run: |
-          # Sync all non-HTML files
-          aws s3 sync dist/ s3://$BUCKET/ --delete --region $AWS_REGION \
-            --exclude "*.html" \
-            --exclude "*.html.gz"
-
-      - name: Set long Cache-Control for static images
-        run: |
-          # Set long cache for images
-          aws s3 cp --recursive \
-            --exclude "*" \
-            --include "*.png" \
-            --include "*.jpg" \
-            --include "*.jpeg" \
-            --include "*.svg" \
-            --include "*.webp" \
-            --include "*.ico" \
+          
+          # Upload JS and CSS with correct MIME types
+          for file in $(find dist -type f \( -name "*.js" -o -name "*.css" \)); do
+            [[ "$file" == *.map ]] && continue
+            ext="${file##*.}"
+            mime="application/javascript"
+            [[ "$ext" == "css" ]] && mime="text/css"
+            aws s3 cp "$file" "s3://$BUCKET/${file#dist/}" \
+              --content-type "$mime; charset=utf-8" \
+              --cache-control "public, max-age=31536000, immutable" \
+              --region $AWS_REGION
+          done
+          
+          # Sync all other files (images, fonts, json, etc)
+          aws s3 sync dist/ s3://$BUCKET/ \
+            --exclude "*.html*" --exclude "*.js" --exclude "*.css" --exclude "*.map" \
             --cache-control "public, max-age=31536000, immutable" \
-            --metadata-directive REPLACE \
-            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
-
-      - name: Set Cache-Control and Content-Type for JavaScript files
-        run: |
-          # Set cache and correct MIME type for JS files
-          aws s3 cp --recursive \
-            --exclude "*" \
-            --include "*.js" \
-            --exclude "*.map" \
-            --content-type "application/javascript; charset=utf-8" \
-            --cache-control "public, max-age=31536000, immutable" \
-            --metadata-directive REPLACE \
-            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
-
-      - name: Set Cache-Control and Content-Type for CSS files
-        run: |
-          # Set cache and correct MIME type for CSS files
-          aws s3 cp --recursive \
-            --exclude "*" \
-            --include "*.css" \
-            --content-type "text/css; charset=utf-8" \
-            --cache-control "public, max-age=31536000, immutable" \
-            --metadata-directive REPLACE \
-            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
-
-      - name: Set Cache-Control for fonts and JSON
-        run: |
-          # Set long cache for fonts and JSON
-          aws s3 cp --recursive \
-            --exclude "*" \
-            --include "*.woff" \
-            --include "*.woff2" \
-            --include "*.ttf" \
-            --include "*.otf" \
-            --include "*.eot" \
-            --include "*.json" \
-            --cache-control "public, max-age=31536000, immutable" \
-            --metadata-directive REPLACE \
-            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
+            --region $AWS_REGION
 
       - name: CloudFront invalidation (optional)
         if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
         run: |
-          # Invalidate only index and root to refresh SPA shell; hashed assets keep long TTL
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/index.html" "/"
+          # Invalidate all paths to clear cached JS with wrong MIME type
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
