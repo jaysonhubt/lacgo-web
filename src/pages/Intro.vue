@@ -67,7 +67,7 @@
           <h2 class="section-title">Tại sao chọn LạcGO?</h2>
           <p class="section-subtitle">Trải nghiệm đặt xe ghép tốt nhất dành cho bạn</p>
         </div>
-        
+
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon green">
@@ -236,7 +236,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 //
 </script>
 
