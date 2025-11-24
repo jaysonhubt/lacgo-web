@@ -47,29 +47,28 @@ router.onError((err, to) => {
 // Global navigation guards
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  
+
   // Check if route is guest route (login, register, forgot password)
   const isGuestRoute = to.meta.layout === 'guest'
-  
+
   // For guest routes, allow immediate access without auth check
   if (isGuestRoute) {
     next()
     return
   }
-  
+
   // For protected routes, initialize and check auth
   if (!authStore.isInitialized) {
     await authStore.initializeAuth()
   }
-  
+
   if (authStore.isAuthenticated) {
     // User is authenticated, allow access
     next()
   } else {
     // User is not authenticated, redirect to login
     next({
-      path: '/login',
-      query: { redirect: to.fullPath }
+      path: '/login'
     })
   }
 })

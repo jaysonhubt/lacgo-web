@@ -24,7 +24,7 @@
         <v-text-field
           v-model="form.account"
           label="Nhập số điện thoại hoặc email"
-          type="string"
+          type="text"
           variant="outlined"
           color="main"
           :rules="accountRules"
@@ -50,6 +50,7 @@
           color="green-lighten-1"
           class="mb-4"
           rounded="lg"
+          autocomplete="current-password"
         />
 
         <div class="d-flex justify-end align-center mb-6">
@@ -139,9 +140,7 @@ const handleLogin = async () => {
     })
 
     if (result.success) {
-      // Redirect to home page or intended page
-      const redirect = router.currentRoute.value.query.redirect as string
-      router.push(redirect || '/')
+      router.push('/home')
     } else {
       // Show error message (you can add a snackbar or alert here)
       console.error('Login failed:', result.error)

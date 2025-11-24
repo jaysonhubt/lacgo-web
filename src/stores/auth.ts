@@ -82,7 +82,6 @@ export const useAuthStore = defineStore('auth', () => {
         account: credentials.account,
         password: credentials.password
       })
-      console.log(response.data)
 
       if (response.data && response.data.user && response.data.token) {
         setUser(response.data.user)
@@ -185,14 +184,13 @@ export const useAuthStore = defineStore('auth', () => {
       // Validate token with server
       const response = await api.get('/user')
 
-      if (response.data && response.data.user) {
+      if (response.data) {
         // Update user data from server
-        setUser(response.data.user)
+        setUser(response.data)
         return true
       } else {
         // Token is invalid
         clearAuth()
-        console.log(194)
         return false
       }
     } catch (err) {

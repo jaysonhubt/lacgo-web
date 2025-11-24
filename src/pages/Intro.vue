@@ -407,7 +407,6 @@
   font-size: 1.05rem;
   box-shadow: 0 8px 25px rgba(76, 175, 80, 0.35);
   transition: all 0.3s;
-  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
