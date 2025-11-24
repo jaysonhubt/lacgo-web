@@ -70,6 +70,8 @@ jobs:
             --include "*.otf" \
             --include "*.eot" \
             --include "*.svg" \
+            --include "*.png" \
+            --include "*.json" \
             --exclude "*.map" \
             --cache-control "public, max-age=31536000, immutable" dist/ s3://$BUCKET/ --region $AWS_REGION
 
