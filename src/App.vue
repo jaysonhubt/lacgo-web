@@ -14,6 +14,6 @@ import GuestLayout from '@/layouts/GuestLayout.vue'
 
 const route = useRoute()
 const layout = computed(() =>
-  route.meta.layout === 'guest' ? GuestLayout : DefaultLayout
+  route.meta.layout === 'default' ? DefaultLayout : GuestLayout
 )
 </script>

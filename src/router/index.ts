@@ -48,41 +48,29 @@ router.onError((err, to) => {
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
-  // Initialize auth state only once
+  // Check if route is guest route (login, register, forgot password)
+  const isGuestRoute = to.meta.layout === 'guest'
+  
+  // For guest routes, allow immediate access without auth check
+  if (isGuestRoute) {
+    next()
+    return
+  }
+  
+  // For protected routes, initialize and check auth
   if (!authStore.isInitialized) {
     await authStore.initializeAuth()
   }
   
-  // Check if route is guest route (login, register, forgot password)
-  const isGuestRoute = to.meta.layout === 'guest'
-  
-  if (isGuestRoute) {
-    // Route is for guests only (login, register, etc.)
-    if (authStore.isAuthenticated) {
-      // User is already authenticated, redirect to requested route or home
-      const redirectTo = to.query.redirect as string || '/'
-      // Avoid redirect loop by checking if redirectTo is different from current path
-      if (redirectTo !== to.path) {
-        next(redirectTo)
-      } else {
-        next('/')
-      }
-    } else {
-      // User is not authenticated, allow access to auth pages
-      next()
-    }
+  if (authStore.isAuthenticated) {
+    // User is authenticated, allow access
+    next()
   } else {
-    // All other routes require authentication
-    if (authStore.isAuthenticated) {
-      // User is authenticated, allow access
-      next()
-    } else {
-      // User is not authenticated, redirect to login
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    }
+    // User is not authenticated, redirect to login
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
   }
 })
 

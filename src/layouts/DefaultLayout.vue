@@ -4,7 +4,7 @@
       <slot />
     </v-main>
     <v-bottom-navigation app class="bottom-nav">
-      <v-btn to="/" :value="'home'">
+      <v-btn to="/home" :value="'home'">
         <v-icon icon="mdi-home-outline"></v-icon>
       </v-btn>
       <v-btn to="/trips" :value="'trips'">

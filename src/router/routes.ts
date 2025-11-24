@@ -1,19 +1,19 @@
 export const routes: any = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/pages/Home.vue'),
+    name: 'Landing',
+    component: () => import('@/pages/Intro.vue'),
     meta: {
-      title: 'Home',
-      layout: 'default'
+      title: 'LạcGO - Ứng dụng đặt xe',
+      layout: 'guest'
     }
   },
   {
-    path: '/demo',
-    name: 'Index',
-    component: () => import('@/pages/Welcome.vue'),
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/pages/Home.vue'),
     meta: {
-      title: 'index',
+      title: 'Trang chủ',
       layout: 'default'
     }
   },
