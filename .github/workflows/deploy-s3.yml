@@ -97,20 +97,40 @@ jobs:
             --metadata-directive REPLACE \
             s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
 
-      - name: Set long Cache-Control for assets (js, css, fonts, json)
+      - name: Set Cache-Control and Content-Type for JavaScript files
         run: |
-          # Set long cache for js, css, fonts; exclude sourcemaps
+          # Set cache and correct MIME type for JS files
           aws s3 cp --recursive \
             --exclude "*" \
             --include "*.js" \
+            --exclude "*.map" \
+            --content-type "application/javascript; charset=utf-8" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
+
+      - name: Set Cache-Control and Content-Type for CSS files
+        run: |
+          # Set cache and correct MIME type for CSS files
+          aws s3 cp --recursive \
+            --exclude "*" \
             --include "*.css" \
+            --content-type "text/css; charset=utf-8" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
+
+      - name: Set Cache-Control for fonts and JSON
+        run: |
+          # Set long cache for fonts and JSON
+          aws s3 cp --recursive \
+            --exclude "*" \
             --include "*.woff" \
             --include "*.woff2" \
             --include "*.ttf" \
             --include "*.otf" \
             --include "*.eot" \
             --include "*.json" \
-            --exclude "*.map" \
             --cache-control "public, max-age=31536000, immutable" \
             --metadata-directive REPLACE \
             s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
