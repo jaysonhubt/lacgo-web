@@ -76,7 +76,7 @@ jobs:
           done
 
       - name: Sync remaining files to S3
-        run: |`
+        run: |
           # Sync all non-HTML files
           aws s3 sync dist/ s3://$BUCKET/ --delete --region $AWS_REGION \
             --exclude "*.html" \
