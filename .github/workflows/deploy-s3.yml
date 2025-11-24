@@ -52,7 +52,7 @@ jobs:
           find dist -name "*.html.gz" -type f | while read gzfile; do
             htmlfile="${gzfile%.gz}"
             s3key="${htmlfile#dist/}"
-            cache="no-cache, no-store, must-revalidate"
+              cache="public, max-age=60, s-maxage=60, stale-while-revalidate=300"
             [[ "$s3key" != "index.html" ]] && cache="public, max-age=3600"
             aws s3 cp "$gzfile" "s3://$BUCKET/$s3key" \
               --content-type "text/html; charset=utf-8" \
