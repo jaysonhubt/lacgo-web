@@ -26,12 +26,10 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Build
-        run: |
-          npm run build
+        run: npm run build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -48,9 +46,8 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy to S3 with correct MIME types and caching
+      - name: Upload HTML (gzip + proper headers)
         run: |
-          # Upload HTML (compressed with gzip)
           find dist -name "*.html" -type f -exec gzip -fk {} \;
           find dist -name "*.html.gz" -type f | while read gzfile; do
             htmlfile="${gzfile%.gz}"
@@ -63,8 +60,9 @@ jobs:
               --cache-control "$cache" \
               --region $AWS_REGION
           done
-          
-          # Upload JS and CSS with correct MIME types
+
+      - name: Upload JS & CSS (correct MIME + long cache)
+        run: |
           for file in $(find dist -type f \( -name "*.js" -o -name "*.css" \)); do
             [[ "$file" == *.map ]] && continue
             ext="${file##*.}"
@@ -75,15 +73,21 @@ jobs:
               --cache-control "public, max-age=31536000, immutable" \
               --region $AWS_REGION
           done
-          
-          # Sync all other files (images, fonts, json, etc)
+
+      - name: Upload other static assets (fonts, images, json…)
+        run: |
           aws s3 sync dist/ s3://$BUCKET/ \
-            --exclude "*.html*" --exclude "*.js" --exclude "*.css" --exclude "*.map" \
+            --exclude "*.html*" \
+            --exclude "*.js" \
+            --exclude "*.css" \
+            --exclude "*.map" \
             --cache-control "public, max-age=31536000, immutable" \
             --region $AWS_REGION
 
-      - name: CloudFront invalidation (optional)
+      - name: CloudFront invalidation
         if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
         run: |
-          # Invalidate all paths to clear cached JS with wrong MIME type
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          # Only invalidate shell SPA
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/index.html" "/"

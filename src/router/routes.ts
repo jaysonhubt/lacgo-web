@@ -1,8 +1,10 @@
+import IntroPage from '@/pages/Intro.vue'
+
 export const routes: any = [
   {
     path: '/',
     name: 'Landing',
-    component: () => import('@/pages/Intro.vue'),
+    component: IntroPage,
     meta: {
       title: 'LạcGO - Ứng dụng đặt xe',
       layout: 'guest'
