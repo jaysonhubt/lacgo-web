@@ -64,8 +64,8 @@ jobs:
 
       - name: Set Cache-Control and compression for index.html
         run: |
-          # Gzip compress index.html
-          gzip -k dist/index.html
+          # Gzip compress index.html (force overwrite if exists)
+          gzip -kf dist/index.html
           
           # Upload with gzip encoding
           aws s3 cp dist/index.html.gz s3://$BUCKET/index.html \
