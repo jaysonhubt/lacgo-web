@@ -8,7 +8,8 @@
           :width="150"
           cover
           alt="LạcGO"
-          src="/logo_no_border.png"
+          src="/logo_no_border_small.png"
+          eager
         ></v-img>
       </div>
       <div class="w-100">

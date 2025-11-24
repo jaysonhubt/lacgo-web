@@ -9,6 +9,8 @@
           alt="Dashboard Background"
           class="header-bg-image"
           cover
+          eager
+          :transition="false"
         ></v-img>
         <!-- Overlay for better text readability -->
         <div class="header-overlay"></div>

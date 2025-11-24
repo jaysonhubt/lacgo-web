@@ -57,7 +57,22 @@ jobs:
           aws s3 cp dist/index.html s3://$BUCKET/index.html --metadata-directive REPLACE \
             --cache-control "no-cache, no-store, must-revalidate" --content-type "text/html" --region $AWS_REGION
 
-      - name: Set long Cache-Control for assets (js, css, fonts)
+      - name: Set long Cache-Control for static images (logo, etc)
+        run: |
+          # Set long cache for root-level images
+          aws s3 cp --recursive \
+            --exclude "*" \
+            --include "*.png" \
+            --include "*.jpg" \
+            --include "*.jpeg" \
+            --include "*.svg" \
+            --include "*.webp" \
+            --include "*.ico" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            dist/ s3://$BUCKET/ --region $AWS_REGION
+
+      - name: Set long Cache-Control for assets (js, css, fonts, json)
         run: |
           # Set long cache for js, css, fonts; exclude sourcemaps
           aws s3 cp --recursive \
@@ -69,11 +84,11 @@ jobs:
             --include "*.ttf" \
             --include "*.otf" \
             --include "*.eot" \
-            --include "*.svg" \
-            --include "*.png" \
             --include "*.json" \
             --exclude "*.map" \
-            --cache-control "public, max-age=31536000, immutable" dist/ s3://$BUCKET/ --region $AWS_REGION
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            dist/ s3://$BUCKET/ --region $AWS_REGION
 
       - name: CloudFront invalidation (optional)
         if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
