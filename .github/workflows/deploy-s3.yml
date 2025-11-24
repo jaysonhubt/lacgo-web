@@ -48,52 +48,43 @@ jobs:
             exit 1
           fi
 
-      - name: Sync to S3 with compression metadata
+      - name: Compress HTML files
         run: |
-          # Sync HTML files with gzip encoding
-          find dist -name "*.html" -type f -exec gzip -k {} \;
+          # Compress all HTML files with gzip
+          find dist -name "*.html" -type f -exec gzip -fk {} \;
+
+      - name: Upload compressed HTML files with metadata
+        run: |
+          # Upload .html.gz files as .html with gzip encoding
+          find dist -name "*.html.gz" -type f | while read gzfile; do
+            htmlfile="${gzfile%.gz}"
+            s3key="${htmlfile#dist/}"
+            
+            # Determine cache-control based on filename
+            if [[ "$s3key" == "index.html" ]]; then
+              CACHE_CONTROL="no-cache, no-store, must-revalidate"
+            else
+              CACHE_CONTROL="public, max-age=3600"
+            fi
+            
+            aws s3 cp "$gzfile" "s3://$BUCKET/$s3key" \
+              --content-type "text/html; charset=utf-8" \
+              --content-encoding gzip \
+              --cache-control "$CACHE_CONTROL" \
+              --metadata-directive REPLACE \
+              --region $AWS_REGION
+          done
+
+      - name: Sync remaining files to S3
+        run: |`
+          # Sync all non-HTML files
           aws s3 sync dist/ s3://$BUCKET/ --delete --region $AWS_REGION \
-            --exclude "*.html.gz" \
-            --content-encoding gzip \
-            --exclude "*" \
-            --include "*.html.gz"
-          
-          # Sync other files normally
-          aws s3 sync dist/ s3://$BUCKET/ --delete --region $AWS_REGION \
+            --exclude "*.html" \
             --exclude "*.html.gz"
 
-      - name: Set Cache-Control and compression for index.html
+      - name: Set long Cache-Control for static images
         run: |
-          # Gzip compress index.html (force overwrite if exists)
-          gzip -kf dist/index.html
-          
-          # Upload with gzip encoding
-          aws s3 cp dist/index.html.gz s3://$BUCKET/index.html \
-            --metadata-directive REPLACE \
-            --cache-control "no-cache, no-store, must-revalidate" \
-            --content-type "text/html; charset=utf-8" \
-            --content-encoding gzip \
-            --region $AWS_REGION
-
-      - name: Configure CloudFront compression (if not already enabled)
-        if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
-        run: |
-          # Note: This updates the default behavior to enable compression
-          # Get current distribution config
-          aws cloudfront get-distribution-config \
-            --id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --query 'DistributionConfig' \
-            --output json > dist-config.json
-          
-          # Update to enable compression (this is a simplified example)
-          # In production, you should update via Terraform/CloudFormation
-          echo "CloudFront compression should be enabled in AWS Console:"
-          echo "Distribution: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
-          echo "Behaviors → Edit → Compress Objects Automatically: Yes"
-
-      - name: Set long Cache-Control for static images (logo, etc)
-        run: |
-          # Set long cache for root-level images
+          # Set long cache for images
           aws s3 cp --recursive \
             --exclude "*" \
             --include "*.png" \
@@ -104,7 +95,7 @@ jobs:
             --include "*.ico" \
             --cache-control "public, max-age=31536000, immutable" \
             --metadata-directive REPLACE \
-            dist/ s3://$BUCKET/ --region $AWS_REGION
+            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
 
       - name: Set long Cache-Control for assets (js, css, fonts, json)
         run: |
@@ -122,7 +113,7 @@ jobs:
             --exclude "*.map" \
             --cache-control "public, max-age=31536000, immutable" \
             --metadata-directive REPLACE \
-            dist/ s3://$BUCKET/ --region $AWS_REGION
+            s3://$BUCKET/ s3://$BUCKET/ --region $AWS_REGION
 
       - name: CloudFront invalidation (optional)
         if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
