@@ -31,7 +31,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'AboutPage',
         name: 'Giới thiệu về LạcGO',
@@ -129,22 +129,22 @@ useHead({
               <v-icon size="40" color="#66BB6A" aria-hidden="true">mdi-shield-check</v-icon>
               <h3>Uy tín</h3>
               <p>Đối tác vận tải được kiểm duyệt kỹ càng, đảm bảo chất lượng dịch vụ</p>
-            </div>
-            <div class="value-card">
-              <v-icon size="40" color="#42A5F5">mdi-lightning-bolt</v-icon>
-              <h4>Nhanh chóng</h4>
+            </article>
+            <article class="value-card" role="listitem">
+              <v-icon size="40" color="#42A5F5" aria-hidden="true">mdi-lightning-bolt</v-icon>
+              <h3>Nhanh chóng</h3>
               <p>Đặt vé chỉ trong vài phút, xác nhận tức thì</p>
-            </div>
-            <div class="value-card">
-              <v-icon size="40" color="#FFA726">mdi-cash-multiple</v-icon>
-              <h4>Minh bạch</h4>
+            </article>
+            <article class="value-card" role="listitem">
+              <v-icon size="40" color="#FFA726" aria-hidden="true">mdi-cash-multiple</v-icon>
+              <h3>Minh bạch</h3>
               <p>Giá cả rõ ràng, không phát sinh chi phí ẩn</p>
-            </div>
-            <div class="value-card">
-              <v-icon size="40" color="#AB47BC">mdi-heart-outline</v-icon>
-              <h4>Tận tâm</h4>
+            </article>
+            <article class="value-card" role="listitem">
+              <v-icon size="40" color="#AB47BC" aria-hidden="true">mdi-heart-outline</v-icon>
+              <h3>Tận tâm</h3>
               <p>Hỗ trợ khách hàng 24/7, luôn lắng nghe và cải thiện</p>
-            </div>
+            </article>
           </div>
         </section>
 
@@ -225,11 +225,6 @@ useHead({
     <LandingFooter />
   </section>
 </template>
-
-<script setup lang="ts">
-import LandingHeader from '@/components/LandingHeader.vue'
-import LandingFooter from '@/components/LandingFooter.vue'
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');

@@ -29,7 +29,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         mainEntity: [
@@ -70,7 +70,7 @@ useHead({
     },
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ContactPage',
         name: 'Liên hệ LạcGO',
@@ -302,11 +302,6 @@ useHead({
     <LandingFooter />
   </section>
 </template>
-
-<script setup lang="ts">
-import LandingHeader from '@/components/LandingHeader.vue'
-import LandingFooter from '@/components/LandingFooter.vue'
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');

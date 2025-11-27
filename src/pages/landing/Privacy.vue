@@ -11,14 +11,14 @@ useHead({
     { name: 'description', content: 'Chính sách bảo mật thông tin cá nhân LạcGO. Cách thu thập, sờ dụng, bảo vệ và quyền của bạn. Tuân thủ Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân.' },
     { name: 'keywords', content: 'chính sách bảo mật LạcGO, bảo vệ dữ liệu, thông tin cá nhân, quyền riêng tư, GDPR' },
     { name: 'robots', content: 'index, follow' },
-    
+
     // Open Graph
     { property: 'og:title', content: 'Chính Sách Bảo Mật LạcGO' },
     { property: 'og:description', content: 'Chính sách bảo mật thông tin cá nhân của LạcGO. Tuân thủ Nghị định 13/2023/NĐ-CP.' },
     { property: 'og:type', content: 'website' },
     { property: 'og:url', content: `${siteUrl}/privacy-policy` },
     { property: 'og:locale', content: 'vi_VN' },
-    
+
     // Twitter Card
     { name: 'twitter:card', content: 'summary' },
   ],
@@ -28,7 +28,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Chính sách bảo mật LạcGO',
@@ -84,7 +84,7 @@ useHead({
           <div class="alert-banner privacy">
             <v-icon color="blue" size="28">mdi-shield-lock-outline</v-icon>
             <div>
-              <strong>Cam kết bảo mật:</strong> LạcGO cam kết bảo vệ dữ liệu cá nhân của bạn theo 
+              <strong>Cam kết bảo mật:</strong> LạcGO cam kết bảo vệ dữ liệu cá nhân của bạn theo
               Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân và các quy định pháp luật Việt Nam.
             </div>
           </div>
@@ -232,11 +232,6 @@ useHead({
   </section>
 </template>
 
-<script setup lang="ts">
-import LandingHeader from '@/components/LandingHeader.vue'
-import LandingFooter from '@/components/LandingFooter.vue'
-</script>
-
 <style scoped>
 /* Tái sử dụng styles từ Terms.vue */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -370,7 +365,7 @@ html {
 }
 
 /* Main */
-.main-content { 
+.main-content {
   max-width: 800px;
   flex: 1;
   min-width: 0;

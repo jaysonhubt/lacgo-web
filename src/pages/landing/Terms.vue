@@ -11,14 +11,14 @@ useHead({
     { name: 'description', content: 'Điều khoản sử dụng dịch vụ LạcGO. Quy định về đặt vé, thanh toán, huỷ chuyến, trách nhiệm của các bên. Tuân thủ Nghị định 10/2020/NĐ-CP và pháp luật Việt Nam.' },
     { name: 'keywords', content: 'điều khoản sử dụng LạcGO, quy định LạcGO, chính sách LạcGO, điều kiện sờ dụng' },
     { name: 'robots', content: 'index, follow' },
-    
+
     // Open Graph
     { property: 'og:title', content: 'Điều Khoản Sử Dụng LạcGO' },
     { property: 'og:description', content: 'Quy định về đặt vé, thanh toán, huỷ chuyến và trách nhiệm của các bên khi sử dụng dịch vụ LạcGO.' },
     { property: 'og:type', content: 'website' },
     { property: 'og:url', content: `${siteUrl}/terms-of-use` },
     { property: 'og:locale', content: 'vi_VN' },
-    
+
     // Twitter Card
     { name: 'twitter:card', content: 'summary' },
   ],
@@ -28,7 +28,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Điều khoản sử dụng LạcGO',
@@ -85,7 +85,7 @@ useHead({
           <div class="alert-banner">
             <v-icon color="green" size="28">mdi-information-outline</v-icon>
             <div>
-              <strong>Lưu ý quan trọng:</strong> LạcGO là nền tảng công nghệ trung gian kết nối hành khách 
+              <strong>Lưu ý quan trọng:</strong> LạcGO là nền tảng công nghệ trung gian kết nối hành khách
               với các đơn vị vận tải hợp pháp. Chúng tôi KHÔNG trực tiếp cung cấp dịch vụ vận chuyển.
             </div>
           </div>
@@ -93,7 +93,7 @@ useHead({
           <section id="section-1" class="content-section">
             <h2 class="section-heading">1. Giới thiệu</h2>
             <p class="section-text">
-              Bằng việc sử dụng nền tảng LạcGO, bạn đồng ý tuân thủ các điều khoản sau. 
+              Bằng việc sử dụng nền tảng LạcGO, bạn đồng ý tuân thủ các điều khoản sau.
               Dịch vụ vận chuyển thực tế do các đơn vị vận tải độc lập cung cấp.
             </p>
           </section>
@@ -239,11 +239,6 @@ useHead({
     <LandingFooter />
   </section>
 </template>
-
-<script setup lang="ts">
-import LandingHeader from '@/components/LandingHeader.vue'
-import LandingFooter from '@/components/LandingFooter.vue'
-</script>
 
 <style scoped>
 /* Import font */
