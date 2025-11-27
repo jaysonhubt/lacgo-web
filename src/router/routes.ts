@@ -1,15 +1,6 @@
-import IntroPage from '@/pages/Intro.vue'
+import LandingPage from '@/pages/landing/Index.vue'
 
 export const routes: any = [
-  {
-    path: '/',
-    name: 'Landing',
-    component: IntroPage,
-    meta: {
-      title: 'LạcGO - Ứng dụng đặt xe',
-      layout: 'guest'
-    }
-  },
   {
     path: '/home',
     name: 'Home',
@@ -176,7 +167,7 @@ export const routes: any = [
       layout: 'default'
     }
   },
-  // Support
+  // Support & Legal (Authenticated)
   {
     path: '/help-center',
     name: 'HelpCenter',

@@ -1,0 +1,21 @@
+# robots.txt for LacGO
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://lacgo.vn/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 0
+
+# Common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

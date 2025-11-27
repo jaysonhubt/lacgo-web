@@ -9,12 +9,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { setupLayouts } from 'virtual:generated-layouts'
 //import { routes } from 'vue-router/auto-routes'
 import { routes } from './routes'
+import { landingPages } from './landingPages'
 import { authGuard, guestGuard } from './guards'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
+  routes: [...routes, ...landingPages],
   scrollBehavior(to, from, savedPosition) {
     // Use saved position for browser back/forward
     if (savedPosition) {

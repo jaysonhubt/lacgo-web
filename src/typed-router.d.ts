@@ -25,7 +25,11 @@ declare module 'vue-router/auto-routes' {
     '/GiftDetail': RouteRecordInfo<'/GiftDetail', '/GiftDetail', Record<never, never>, Record<never, never>>,
     '/HelpCenter': RouteRecordInfo<'/HelpCenter', '/HelpCenter', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
-    '/Intro': RouteRecordInfo<'/Intro', '/Intro', Record<never, never>, Record<never, never>>,
+    '/landing/About': RouteRecordInfo<'/landing/About', '/landing/About', Record<never, never>, Record<never, never>>,
+    '/landing/HelpCenter': RouteRecordInfo<'/landing/HelpCenter', '/landing/HelpCenter', Record<never, never>, Record<never, never>>,
+    '/landing/Index': RouteRecordInfo<'/landing/Index', '/landing/Index', Record<never, never>, Record<never, never>>,
+    '/landing/Privacy': RouteRecordInfo<'/landing/Privacy', '/landing/Privacy', Record<never, never>, Record<never, never>>,
+    '/landing/Terms': RouteRecordInfo<'/landing/Terms', '/landing/Terms', Record<never, never>, Record<never, never>>,
     '/Language': RouteRecordInfo<'/Language', '/Language', Record<never, never>, Record<never, never>>,
     '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/MessageDetail': RouteRecordInfo<'/MessageDetail', '/MessageDetail', Record<never, never>, Record<never, never>>,
@@ -83,8 +87,24 @@ declare module 'vue-router/auto-routes' {
       routes: '/Home'
       views: never
     }
-    'src/pages/Intro.vue': {
-      routes: '/Intro'
+    'src/pages/landing/About.vue': {
+      routes: '/landing/About'
+      views: never
+    }
+    'src/pages/landing/HelpCenter.vue': {
+      routes: '/landing/HelpCenter'
+      views: never
+    }
+    'src/pages/landing/Index.vue': {
+      routes: '/landing/Index'
+      views: never
+    }
+    'src/pages/landing/Privacy.vue': {
+      routes: '/landing/Privacy'
+      views: never
+    }
+    'src/pages/landing/Terms.vue': {
+      routes: '/landing/Terms'
       views: never
     }
     'src/pages/Language.vue': {
