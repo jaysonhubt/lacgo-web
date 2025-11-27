@@ -4,18 +4,29 @@
       <router-link to="/" class="logo-link">
         <img src="/logo_no_border_small.png" alt="LạcGO" class="logo"/>
       </router-link>
-      <nav class="nav">
-        <router-link to="/" class="nav-link">Trang Chủ</router-link>
-        <router-link to="/about" class="nav-link">Giới thiệu</router-link>
-        <a href="/#features" class="nav-link">Tính năng</a>
-        <router-link to="/help-center" class="nav-link">Hỗ trợ</router-link>
-        <router-link to="/login" class="btn-login">
+      
+      <button class="menu-toggle" @click="menuOpen = !menuOpen" aria-label="Toggle menu">
+        <v-icon>{{ menuOpen ? 'mdi-close' : 'mdi-menu' }}</v-icon>
+      </button>
+
+      <nav class="nav" :class="{ 'nav-open': menuOpen }">
+        <router-link to="/" class="nav-link" @click="menuOpen = false">Trang Chủ</router-link>
+        <router-link to="/about" class="nav-link" @click="menuOpen = false">Giới thiệu</router-link>
+        <a href="/#features" class="nav-link" @click="menuOpen = false">Tính năng</a>
+        <router-link to="/help-center" class="nav-link" @click="menuOpen = false">Hỗ trợ</router-link>
+        <router-link to="/login" class="btn-login" @click="menuOpen = false">
           Đăng nhập
         </router-link>
       </nav>
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const menuOpen = ref(false)
+</script>
 
 <style scoped>
 .landing-header {
@@ -102,13 +113,60 @@
   box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
 }
 
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #424242;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s;
+}
+
+.menu-toggle:hover {
+  color: #66BB6A;
+}
+
 @media (max-width: 968px) {
-  .nav-link:not(.btn-login) {
-    display: none;
+  .menu-toggle {
+    display: block;
+    z-index: 1001;
   }
 
   .nav {
-    gap: 1rem;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 5rem 2rem 2rem;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s ease;
+    gap: 1.5rem;
+  }
+
+  .nav-open {
+    right: 0;
+  }
+
+  .nav-link {
+    font-size: 1.1rem;
+    padding: 0.75rem 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .btn-login {
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
   }
 }
 

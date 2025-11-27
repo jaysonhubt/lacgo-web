@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer'
 import fs from 'fs'
 import path from 'path'
 
-const routes = ['/', '/login']
+const routes = ['/', '/about', '/help-center', '/terms-of-use', '/privacy-policy']
 const distDir = path.resolve('./dist')
 const prerenderDir = path.join(distDir)
 const baseUrl = 'http://localhost:3000'

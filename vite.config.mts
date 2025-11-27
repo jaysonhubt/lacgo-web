@@ -51,14 +51,15 @@ export default defineConfig({
         families: [
           {
             name: 'Roboto',
-            weights: [100, 300, 400, 500, 700, 900],
-            styles: ['normal', 'italic'],
+            weights: [400, 500, 700],
+            styles: ['normal'],
           },
         ],
       },
       custom: {
         families: [],
-        preload: false
+        preload: false,
+        display: 'swap',
       }
     }),
   ],
@@ -89,5 +90,18 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-router', 'pinia'],
+          'vendor-vuetify': ['vuetify'],
+        },
+      },
+    },
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
   },
 })
