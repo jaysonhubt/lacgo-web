@@ -22,20 +22,20 @@
         </div>
         <div class="footer-links">
           <div class="footer-col">
-            <h4>Về LạcGO</h4>
+            <h2>Về LạcGO</h2>
             <router-link to="/about">Giới thiệu</router-link>
             <a href="/#features">Tính năng</a>
             <a href="/#how-it-works">Cách hoạt động</a>
             <a href="/#faq">Câu hỏi thường gặp</a>
           </div>
           <div class="footer-col">
-            <h4>Chính sách</h4>
+            <h2>Chính sách</h2>
             <router-link to="/terms-of-use">Điều khoản sử dụng</router-link>
             <router-link to="/privacy-policy">Chính sách bảo mật</router-link>
             <router-link to="/help-center">Hỗ trợ khách hàng</router-link>
           </div>
           <div class="footer-col">
-            <h4>Liên hệ</h4>
+            <h2>Liên hệ</h2>
             <a href="mailto:support@lacgo.vn">
               <v-icon size="16">mdi-email</v-icon>
               support@lacgo.vn
@@ -50,12 +50,12 @@
             </p>
           </div>
           <div class="footer-col">
-            <h4>Tải ứng dụng</h4>
+            <h2>Tải ứng dụng</h2>
             <a href="#" class="app-badge">
-              <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store" style="height: 45px;"/>
+              <img src="/download-on-the-app-store.svg" alt="App Store" style="height: 45px;"/>
             </a>
             <a href="#" class="app-badge">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style="height: 40px; margin-top: 8px;"/>
+              <img src="/download-on-the-google-play-store.svg" alt="Google Play" style="height: 40px; margin-top: 8px;"/>
             </a>
           </div>
         </div>
@@ -144,7 +144,7 @@
   gap: 2rem;
 }
 
-.footer-col h4 {
+.footer-col h2 {
   color: white;
   font-size: 1.1rem;
   font-weight: 600;
