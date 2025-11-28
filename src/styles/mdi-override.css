@@ -1,0 +1,8 @@
+/* Override Material Design Icons font-display for better performance */
+@font-face {
+  font-family: 'Material Design Icons';
+  src: url('../node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

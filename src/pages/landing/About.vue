@@ -77,7 +77,13 @@ useHead({
         <section class="intro-section" aria-labelledby="intro-heading">
           <div class="intro-grid">
             <div class="intro-image">
-              <img src="/dashboard_bg1_small.png" alt="Giao diện ứng dụng LạcGO hiển thị danh sách chuyến đi liên tỉnh" loading="lazy" />
+              <img 
+                src="/dashboard_bg1_small.png"
+                srcset="/dashboard_bg1_tiny.png 480w, /dashboard_bg1_small.png 800w"
+                sizes="(max-width: 640px) 100vw, (max-width: 968px) 50vw, 450px"
+                alt="Giao diện ứng dụng LạcGO hiển thị danh sách chuyến đi liên tỉnh" 
+                loading="lazy" 
+              />
             </div>
             <div class="intro-text">
               <h2 id="intro-heading" class="section-heading">Chúng tôi là ai?</h2>

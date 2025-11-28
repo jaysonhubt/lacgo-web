@@ -7,6 +7,7 @@ import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -19,6 +20,9 @@ export default defineConfig({
       dts: 'src/typed-router.d.ts',
     }),
     Layouts(),
+    createHtmlPlugin({
+      minify: true,
+    }),
     AutoImport({
       imports: [
         'vue',

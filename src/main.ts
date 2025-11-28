@@ -15,7 +15,7 @@ import { createApp } from 'vue'
 
 // Styles
 import 'unfonts.css'
-import '@mdi/font/css/materialdesignicons.css'
+import './styles/mdi-override.css'
 
 const app = createApp(App)
 

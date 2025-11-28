@@ -140,7 +140,15 @@ useHead({
         </div>
         <div class="hero-image">
           <div class="image-decoration"></div>
-          <img src="/dashboard_bg1_small.png" alt="Giao diện ứng dụng LạcGO đặt xe ghép liên tỉnh trên điện thoại" class="hero-img" loading="eager" fetchpriority="high"/>
+          <img 
+            src="/dashboard_bg1_small.png"
+            srcset="/dashboard_bg1_tiny.png 480w, /dashboard_bg1_small.png 800w"
+            sizes="(max-width: 640px) 100vw, (max-width: 968px) 50vw, 500px"
+            alt="Giao diện ứng dụng LạcGO đặt xe ghép liên tỉnh trên điện thoại" 
+            class="hero-img" 
+            loading="eager" 
+            fetchpriority="high"
+          />
         </div>
       </div>
     </main>
