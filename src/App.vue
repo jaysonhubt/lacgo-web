@@ -16,4 +16,12 @@ const route = useRoute()
 const layout = computed(() =>
   route.meta.layout === 'default' ? DefaultLayout : GuestLayout
 )
+
+const isPWA =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  window.navigator.standalone === true
+
+if (isPWA) {
+  console.log('Running as PWA')
+}
 </script>
