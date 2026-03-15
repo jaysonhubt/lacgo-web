@@ -200,7 +200,7 @@ onUnmounted(() => {
 }
 
 .nav-utility {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 0.5rem;
 }
