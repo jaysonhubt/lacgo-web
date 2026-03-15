@@ -43,5 +43,14 @@ export const landingPages: any = [
       title: 'Chính sách bảo mật',
       layout: 'guest'
     }
+  },
+  {
+    path: '/am-lich',
+    name: 'LunarCalendar',
+    component: () => import('@/pages/landing/LunarCalendar.vue'),
+    meta: {
+      title: 'Âm Lịch',
+      layout: 'guest'
+    }
   }
 ]

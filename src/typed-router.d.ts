@@ -28,6 +28,7 @@ declare module 'vue-router/auto-routes' {
     '/landing/About': RouteRecordInfo<'/landing/About', '/landing/About', Record<never, never>, Record<never, never>>,
     '/landing/HelpCenter': RouteRecordInfo<'/landing/HelpCenter', '/landing/HelpCenter', Record<never, never>, Record<never, never>>,
     '/landing/Index': RouteRecordInfo<'/landing/Index', '/landing/Index', Record<never, never>, Record<never, never>>,
+    '/landing/LunarCalendar': RouteRecordInfo<'/landing/LunarCalendar', '/landing/LunarCalendar', Record<never, never>, Record<never, never>>,
     '/landing/Privacy': RouteRecordInfo<'/landing/Privacy', '/landing/Privacy', Record<never, never>, Record<never, never>>,
     '/landing/Terms': RouteRecordInfo<'/landing/Terms', '/landing/Terms', Record<never, never>, Record<never, never>>,
     '/Language': RouteRecordInfo<'/Language', '/Language', Record<never, never>, Record<never, never>>,
@@ -97,6 +98,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/landing/Index.vue': {
       routes: '/landing/Index'
+      views: never
+    }
+    'src/pages/landing/LunarCalendar.vue': {
+      routes: '/landing/LunarCalendar'
       views: never
     }
     'src/pages/landing/Privacy.vue': {
