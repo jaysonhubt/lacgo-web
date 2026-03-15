@@ -379,8 +379,9 @@ useHead({
               >
                 <div class="day-top">
                   <span class="solar-day">{{ cell.date.getDate() }}</span>
-                  <span class="lunar-day">{{ cell.lunarLabel }}</span>
                 </div>
+
+                <span class="lunar-day">{{ cell.lunarLabel }}</span>
 
                 <p v-if="cell.holidays.length" class="holiday-text" :title="getHolidayText(cell)">
                   {{ getHolidayText(cell) }}
@@ -562,6 +563,7 @@ useHead({
 .day-cell {
   min-height: 112px;
   padding: 0.55rem;
+  position: relative;
   border-radius: 12px;
   border: 1px solid #edf1f6;
   background: #fff;
@@ -572,8 +574,7 @@ useHead({
 
 .day-top {
   display: flex;
-  justify-content: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
@@ -583,6 +584,8 @@ useHead({
 }
 
 .lunar-day {
+  margin-top: 0.15rem;
+  align-self: flex-end;
   font-size: 0.78rem;
   color: #6b7280;
   font-weight: 600;
@@ -610,6 +613,8 @@ useHead({
 
 .holiday-text {
   margin: 0;
+  width: 100%;
+  text-align: center;
   font-size: 0.72rem;
   line-height: 1.35;
   color: #c62828;
@@ -617,11 +622,10 @@ useHead({
   background: #ffebee;
   border-radius: 8px;
   padding: 0.16rem 0.28rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
 }
 
 .day-cell.is-outside {
@@ -727,7 +731,10 @@ useHead({
 @media (max-width: 640px) {
   .hero-container,
   .calendar-container {
-    padding: 0 1rem;
+    padding: 0 0.3rem;
+  }
+  .calendar-panel {
+    padding: 1rem 0.3rem;
   }
 
   .calendar-grid {
@@ -781,7 +788,7 @@ useHead({
   .holiday-text {
     font-size: 0.54rem;
     padding: 0.12rem 0.2rem;
-    -webkit-line-clamp: 2;
+    line-height: 1.25;
   }
 
   .legend-panel {
