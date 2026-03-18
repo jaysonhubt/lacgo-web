@@ -24,20 +24,52 @@ type CalendarCell = {
   holidays: string[]
 }
 
+type DayDetail = {
+  solarText: string
+  lunarText: string
+  weekdayText: string
+  canChiDay: string
+  canChiMonth: string
+  canChiYear: string
+  auspiciousHours: string[]
+  khongMinhDay: string
+  khongMinhAdvice: string
+}
+
 const WEEKDAYS = ['Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'CN']
+const HEAVENLY_STEMS = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý']
+const EARTHLY_BRANCHES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi']
+const HOUR_BRANCHES = [
+  'Tý (23:00-01:00)',
+  'Sửu (01:00-03:00)',
+  'Dần (03:00-05:00)',
+  'Mão (05:00-07:00)',
+  'Thìn (07:00-09:00)',
+  'Tỵ (09:00-11:00)',
+  'Ngọ (11:00-13:00)',
+  'Mùi (13:00-15:00)',
+  'Thân (15:00-17:00)',
+  'Dậu (17:00-19:00)',
+  'Tuất (19:00-21:00)',
+  'Hợi (21:00-23:00)',
+]
+const GOOD_HOUR_PATTERN = ['110100101100', '001101001011', '110011010010', '101100110100', '001011001101', '010010110011']
+
 const today = new Date()
 const viewMonth = ref(today.getMonth())
 const viewYear = ref(today.getFullYear())
+const detailDialog = ref(false)
+const selectedCell = ref<CalendarCell | null>(null)
 
 const SOLAR_HOLIDAYS: Record<string, string> = {
   '1-1': 'Tết Dương lịch',
-  '30-4': 'Ngày Giải phóng miền Nam (30/04)',
-  '1-5': 'Quốc tế Lao động (01/05)',
-  '2-9': 'Quốc khánh (02/09)',
+  '30-4': 'Ngày Giải phóng miền Nam',
+  '1-5': 'Quốc tế Lao động',
+  '2-9': 'Quốc khánh',
 }
 
 const LUNAR_HOLIDAYS: Record<string, string> = {
-  '10-3': 'Giỗ Tổ Hùng Vương (10/03 ÂL)',
+  '10-3': 'Giỗ Tổ Hùng Vương',
 }
 
 const monthTitle = computed(() => {
@@ -75,6 +107,18 @@ const monthCells = computed<CalendarCell[]>(() => {
   return cells
 })
 
+const selectedDetail = computed<DayDetail | null>(() => {
+  if (!selectedCell.value) {
+    return null
+  }
+
+  return buildDayDetail(selectedCell.value)
+})
+
+const todayCell = computed<CalendarCell>(() => buildCell(today, true))
+const todayDetail = computed<DayDetail>(() => buildDayDetail(todayCell.value))
+const todayHolidayText = computed(() => getHolidayText(todayCell.value))
+
 function buildCell(date: Date, isCurrentMonth: boolean): CalendarCell {
   const solarDay = date.getDate()
   const solarMonth = date.getMonth() + 1
@@ -92,11 +136,138 @@ function buildCell(date: Date, isCurrentMonth: boolean): CalendarCell {
     isCurrentMonth,
     isToday,
     lunar,
-    lunarLabel: lunar.day === 1 ? `1/${lunar.month}` : `${lunar.day}`,
+    lunarLabel: `${lunar.day}/${lunar.month}`,
     isLunarFirst: lunar.day === 1,
     isLunarFullMoon: lunar.day === 15,
     holidays: [solarHoliday, lunarHoliday].filter((v): v is string => Boolean(v)),
   }
+}
+
+function openDayDetail(cell: CalendarCell) {
+  selectedCell.value = cell
+  detailDialog.value = true
+}
+
+function shiftDayDetail(step: number) {
+  if (!selectedCell.value) {
+    return
+  }
+
+  const nextDate = new Date(selectedCell.value.date)
+  nextDate.setDate(nextDate.getDate() + step)
+
+  viewMonth.value = nextDate.getMonth()
+  viewYear.value = nextDate.getFullYear()
+
+  selectedCell.value = buildCell(nextDate, true)
+}
+
+function buildDayDetail(cell: CalendarCell): DayDetail {
+  const date = cell.date
+  const lunar = cell.lunar
+  const canChiDay = getCanChiDay(date)
+  const canChiMonth = getCanChiMonth(lunar)
+  const canChiYear = getCanChiYear(lunar.year)
+  const khongMinh = getKhongMinhXuatHanh(lunar)
+
+  return {
+    solarText: formatSolarDate(date),
+    lunarText: `${lunar.day}/${lunar.month}/${lunar.year}${lunar.leap ? ' (tháng nhuận)' : ''}`,
+    weekdayText: date.toLocaleDateString('vi-VN', { weekday: 'long' }),
+    canChiDay,
+    canChiMonth,
+    canChiYear,
+    auspiciousHours: getAuspiciousHours(date),
+    khongMinhDay: khongMinh.name,
+    khongMinhAdvice: khongMinh.advice,
+  }
+}
+
+function getKhongMinhXuatHanh(lunar: LunarDate) {
+  const cycle6_14710 = [
+    { name: 'Đường Phong', advice: 'Rất tốt, xuất hành thuận lợi, cầu tài được như ý muốn, gặp quý nhân phù trợ.' },
+    { name: 'Kim Thổ', advice: 'Ra đi nhỡ tàu, nhỡ xe, cầu tài không được, trên đường đi mất của, bất lợi.' },
+    { name: 'Kim Dương', advice: 'Xuất hành tốt, có quý nhân phù trợ, tài lộc thông suốt, kiện có nhiều lý phải.' },
+    { name: 'Thuần Dương', advice: 'Xuất hành tốt, lúc về cũng tốt, nhiều thuận lợi, được người tốt giúp đỡ, cầu tài được như ý muốn, tranh luận thường thắng lợi.' },
+    { name: 'Đạo Tặc', advice: 'Rất xấu. Xuất hành bị hại, mất của.' },
+    { name: 'Hảo Thương', advice: 'Xuất hành thuận lợi, gặp người lớn vừa lòng, làm việc việc như ý muốn, áo phẩm vinh quy.' },
+  ]
+
+  const cycle8_25811 = [
+    { name: 'Thiên Đạo', advice: 'Xuất hành cầu tài nên tránh, dù được cũng rất tốn kém, thất lý mà thua.' },
+    { name: 'Thiên Môn', advice: 'Xuất hành làm mọi việc đều vừa ý, cầu được ước thấy mọi việc đều thành đạt.' },
+    { name: 'Thiên Đường', advice: 'Xuất hành tốt, quý nhân phù trợ, buôn bán may mắn, mọi việc đều như ý.' },
+    { name: 'Thiên Tài', advice: 'Nên xuất hành, cầu tài thắng lợi. Được người tốt giúp đỡ. Mọi việc đều thuận.' },
+    { name: 'Thiên Tặc', advice: 'Xuất hành xấu, cầu tài không được. Đi đường dễ mất cắp. Mọi việc đều rất xấu.' },
+    { name: 'Thiên Dương', advice: 'Xuất hành tốt, cầu tài được tài. Hỏi vợ được vợ. Mọi việc đều như ý muốn.' },
+    { name: 'Thiên Hầu', advice: 'Xuất hành dầu ít hay nhiều cũng cãi cọ, phải tránh xẩy ra tai nạn chảy máu, máu sẽ khó cầm.' },
+    { name: 'Thiên Thương', advice: 'Xuất hành để gặp cấp trên thì tuyệt vời, cầu tài thì được tài. Mọi việc đều thuận lợi.' },
+  ]
+
+  const cycle8_36912 = [
+    { name: 'Chu Tước', advice: 'Xuất hành, cầu tài đều xấu. Hay mất của, kiện cáo thua vì đuối lý.' },
+    { name: 'Bạch Hổ Đầu', advice: 'Xuất hành, cầu tài đều được. Đi đâu đều thông đạt cả.' },
+    { name: 'Bạch Hổ Kiếp', advice: 'Xuất hành, cầu tài được như ý muốn, đi hướng Nam và Bắc rất thuận lợi.' },
+    { name: 'Bạch Hổ Túc', advice: 'Cấm đi xa, làm việc gì cũng không thành công. Rất xấu trong mọi việc.' },
+    { name: 'Huyền Vũ', advice: 'Xuất hành thường gặp cãi cọ, gặp việc xấu, không nên đi.' },
+    { name: 'Thanh Long Đầu', advice: 'Xuất hành nên đi vào sáng sớm. Cầu tài thắng lợi. Mọi việc như ý.' },
+    { name: 'Thanh Long Kiếp', advice: 'Xuất hành 4 phương, 8 hướng đều tốt, trăm sự được như ý.' },
+    { name: 'Thanh Long Túc', advice: 'Đi xa không nên, xuất hành xấu, tài lộc không có. Kiện cáo cũng đuối lý.' },
+  ]
+
+  const day = lunar.day
+
+  if ([1, 4, 7, 10].includes(lunar.month)) {
+    return cycle6_14710[(day - 1) % 6]
+  }
+
+  if ([2, 5, 8, 11].includes(lunar.month)) {
+    return cycle8_25811[(day - 1) % 8]
+  }
+
+  return cycle8_36912[(day - 1) % 8]
+}
+
+function formatSolarDate(date: Date) {
+  return date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+}
+
+function getCanChiDay(date: Date) {
+  const jd = jdFromDate(date.getDate(), date.getMonth() + 1, date.getFullYear())
+  const can = HEAVENLY_STEMS[(jd + 9) % 10]
+  const chi = EARTHLY_BRANCHES[(jd + 1) % 12]
+  return `${can} ${chi}`
+}
+
+function getCanChiMonth(lunar: LunarDate) {
+  const can = HEAVENLY_STEMS[(lunar.year * 12 + lunar.month + 3) % 10]
+  const chi = EARTHLY_BRANCHES[(lunar.month + 1) % 12]
+  return `${can} ${chi}`
+}
+
+function getCanChiYear(lunarYear: number) {
+  const can = HEAVENLY_STEMS[(lunarYear + 6) % 10]
+  const chi = EARTHLY_BRANCHES[(lunarYear + 8) % 12]
+  return `${can} ${chi}`
+}
+
+function getAuspiciousHours(date: Date) {
+  const jd = jdFromDate(date.getDate(), date.getMonth() + 1, date.getFullYear())
+  const dayChiIndex = (jd + 1) % 12
+  const pattern = GOOD_HOUR_PATTERN[dayChiIndex % 6]
+  const result: string[] = []
+
+  for (let i = 0; i < pattern.length; i += 1) {
+    if (pattern[i] === '1') {
+      result.push(HOUR_BRANCHES[i])
+    }
+  }
+
+  return result
 }
 
 function getLunarHolidayLabel(date: Date, lunar: LunarDate) {
@@ -338,6 +509,59 @@ useHead({
 
     <div class="page-content">
       <div class="calendar-container">
+        <section class="today-panel" aria-label="Thông tin ngày hiện tại">
+          <div class="today-panel-head">
+            <div>
+              <h3 class="today-panel-title">Hôm nay</h3>
+              <p class="today-panel-subtitle">
+                {{ todayDetail.weekdayText }} {{ todayDetail.solarText }}
+              </p>
+            </div>
+            <p v-if="todayCell.holidays.length" class="today-holiday">
+              Ngày lễ: <strong>{{ todayHolidayText }}</strong>
+            </p>
+          </div>
+
+          <div class="today-panel-body">
+            <div class="today-main">
+              <div class="date-hero-row">
+                <div class="date-hero-box solar">
+                  <span class="date-hero-label">Dương lịch</span>
+                  <p class="date-hero-number">{{ todayCell.date.getDate() }}</p>
+                  <p class="date-hero-meta">Tháng {{ todayCell.date.getMonth() + 1 }}/{{ todayCell.date.getFullYear() }}</p>
+                </div>
+                <div class="date-hero-box lunar">
+                  <span class="date-hero-label">Âm lịch</span>
+                  <p class="date-hero-number">{{ todayCell.lunar.day }}</p>
+                  <p class="date-hero-meta">
+                    Tháng {{ todayCell.lunar.month }}/{{ todayCell.lunar.year }}
+                    <span v-if="todayCell.lunar.leap">(nhuận)</span>
+                  </p>
+                </div>
+              </div>
+
+              <p class="detail-canchi-line today-canchi-line">
+                Ngày <strong>{{ todayDetail.canChiDay }}</strong>
+                tháng <strong>{{ todayDetail.canChiMonth }}</strong>
+                năm <strong>{{ todayDetail.canChiYear }}</strong>
+              </p>
+            </div>
+
+            <div class="today-extra">
+              <div class="detail-section">
+                <h4>Giờ hoàng đạo</h4>
+                <div class="hour-tags">
+                  <span v-for="h in todayDetail.auspiciousHours" :key="`today-${h}`" class="hour-tag">{{ h }}</span>
+                </div>
+              </div>
+              <div class="detail-section">
+                <p class="khong-minh-name"><strong>{{ todayDetail.khongMinhDay }}</strong></p>
+                <p class="khong-minh-advice">{{ todayDetail.khongMinhAdvice }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="calendar-panel" aria-label="Lịch dương âm theo tháng">
           <div class="calendar-toolbar">
             <h2 class="month-title">{{ monthTitle }}</h2>
@@ -368,6 +592,7 @@ useHead({
                 v-for="cell in monthCells"
                 :key="cell.date.toISOString()"
                 class="day-cell"
+                tabindex="0"
                 :class="{
                   'is-outside': !cell.isCurrentMonth,
                   'is-today': cell.isToday,
@@ -376,6 +601,8 @@ useHead({
                   'is-lunar-fullmoon': cell.isLunarFullMoon,
                 }"
                 role="gridcell"
+                @click="openDayDetail(cell)"
+                @keydown.enter="openDayDetail(cell)"
               >
                 <div class="day-top">
                   <span class="solar-day">{{ cell.date.getDate() }}</span>
@@ -408,6 +635,47 @@ useHead({
         </section>
       </div>
     </div>
+
+    <v-dialog v-model="detailDialog" max-width="640">
+      <v-card v-if="selectedDetail" class="day-detail-card">
+        <v-card-title class="day-detail-title">
+          {{ selectedDetail.weekdayText }}  {{ selectedDetail.solarText }}
+        </v-card-title>
+        <v-card-text class="day-detail-content">
+          <div class="detail-grid">
+            <p>Âm lịch: <strong>{{ selectedDetail.lunarText }}</strong></p>
+            <p class="detail-canchi-line">
+              Ngày <strong>{{ selectedDetail.canChiDay }}</strong>
+              tháng <strong>{{ selectedDetail.canChiMonth }}</strong>
+              năm <strong>{{ selectedDetail.canChiYear }}</strong>
+            </p>
+          </div>
+
+          <div class="detail-sections-row">
+            <div class="detail-section">
+              <h4>Giờ hoàng đạo</h4>
+              <div class="hour-tags">
+                <span v-for="h in selectedDetail.auspiciousHours" :key="h" class="hour-tag">{{ h }}</span>
+              </div>
+            </div>
+            <div class="detail-section">
+              <p class="khong-minh-name">Ngày <strong>{{ selectedDetail.khongMinhDay }}</strong></p>
+              <p class="khong-minh-advice">{{ selectedDetail.khongMinhAdvice }}</p>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn variant="text" prepend-icon="mdi-chevron-left" @click="shiftDayDetail(-1)">
+            Ngày trước
+          </v-btn>
+          <v-btn variant="text" append-icon="mdi-chevron-right" @click="shiftDayDetail(1)">
+            Ngày sau
+          </v-btn>
+          <v-spacer />
+          <v-btn color="primary" variant="flat" @click="detailDialog = false">Đóng</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <LandingFooter />
   </section>
@@ -471,11 +739,139 @@ useHead({
 }
 
 .calendar-panel,
-.legend-panel {
+.legend-panel,
+.today-panel {
   background: #fff;
   border-radius: 18px;
   border: 1px solid #e9edf3;
   box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+.today-panel {
+  grid-column: 1 / -1;
+  padding: 1.15rem;
+  background: #fff;
+  border-top: 4px solid #66bb6a;
+}
+
+.today-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+}
+
+.today-panel-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.today-panel-subtitle {
+  margin: 0.3rem 0 0;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.today-panel-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.today-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.today-main .date-hero-row {
+  margin-bottom: 0;
+}
+
+.today-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.today-canchi-line {
+  background: #f8fafc;
+  border: 1px solid #e5ebf2;
+  border-radius: 12px;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.92rem;
+}
+
+.date-hero-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.date-hero-box {
+  background: #f8fafc;
+  border: 1px solid #e7edf4;
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.date-hero-box.solar {
+  border-left: 5px solid #2e7d32;
+}
+
+.date-hero-box.lunar {
+  border-left: 5px solid #f59e0b;
+}
+
+.date-hero-label {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.date-hero-number {
+  margin: 0.2rem 0;
+  font-size: 2.6rem;
+  line-height: 1;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.date-hero-meta {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.today-holiday {
+  margin: 0;
+  padding: 0.5rem 0.62rem;
+  background: #fff3e0;
+  border-radius: 999px;
+  color: #8a3d06;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  border: 1px solid #ffe0b2;
+}
+
+.today-extra .detail-section {
+  border: 1px solid #e7edf4;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+}
+
+.today-extra .detail-section h4 {
+  color: #1f2937;
+  font-weight: 700;
 }
 
 .calendar-panel {
@@ -570,6 +966,18 @@ useHead({
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.day-cell:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.day-cell:focus-visible {
+  outline: 2px solid #66bb6a;
+  outline-offset: 1px;
 }
 
 .day-top {
@@ -579,14 +987,14 @@ useHead({
 }
 
 .solar-day {
-  font-size: 1.2rem;
+  font-size: 1.32rem;
   font-weight: 700;
 }
 
 .lunar-day {
   margin-top: 0.15rem;
   align-self: flex-end;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   color: #6b7280;
   font-weight: 600;
 }
@@ -629,7 +1037,7 @@ useHead({
 }
 
 .day-cell.is-outside {
-  background: #f8fafc;
+  background: #d4d8db;
   opacity: 0.7;
 }
 
@@ -701,8 +1109,79 @@ useHead({
   line-height: 1.45;
 }
 
+.day-detail-title {
+  font-weight: 700;
+}
+
+.day-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem 1rem;
+}
+
+.detail-grid p {
+  margin: 0;
+}
+
+.detail-sections-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.detail-section {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.detail-section h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.detail-section p {
+  margin: 0;
+}
+
+.hour-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.hour-tag {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 6px;
+  padding: 0.18rem 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.khong-minh-name {
+  font-size: 1rem;
+  margin-bottom: 0.25rem !important;
+}
+
+.khong-minh-advice {
+  font-size: 0.85rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
 @media (max-width: 968px) {
   .calendar-container {
+    grid-template-columns: 1fr;
+  }
+
+  .today-panel-body {
     grid-template-columns: 1fr;
   }
 
@@ -726,13 +1205,54 @@ useHead({
   .day-cell {
     min-height: 100px;
   }
+
 }
 
 @media (max-width: 640px) {
+  .page-hero {
+    padding: 1rem 0.5rem 1rem;
+  }
+  .hero-container {
+    gap: 0.5rem;
+  }
+  .breadcrumb {
+    margin-bottom: 0.5rem;
+  }
   .hero-container,
   .calendar-container {
     padding: 0 0.3rem;
   }
+
+  .today-panel {
+    padding: 0.85rem;
+  }
+
+  .today-panel-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .today-panel-title {
+    font-size: 1.03rem;
+  }
+
+  .today-panel-subtitle {
+    font-size: 0.84rem;
+  }
+
+  .today-holiday {
+    font-size: 0.78rem;
+    padding: 0.42rem 0.52rem;
+    border-radius: 10px;
+  }
+
+  .today-canchi-line {
+    font-size: 0.84rem;
+    padding: 0.62rem 0.68rem;
+  }
+
   .calendar-panel {
     padding: 1rem 0.3rem;
   }
@@ -778,11 +1298,28 @@ useHead({
   }
 
   .solar-day {
-    font-size: 0.86rem;
+    font-size: 1rem;
   }
 
   .lunar-day {
-    font-size: 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .date-hero-row {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .date-hero-box {
+    padding: 0.58rem 0.68rem;
+  }
+
+  .date-hero-number {
+    font-size: 2.1rem;
+  }
+
+  .date-hero-meta {
+    font-size: 0.74rem;
   }
 
   .holiday-text {
@@ -797,6 +1334,10 @@ useHead({
 
   .legend-panel li {
     font-size: 0.84rem;
+  }
+
+  .detail-sections-row {
+    grid-template-columns: 1fr;
   }
 }
 
