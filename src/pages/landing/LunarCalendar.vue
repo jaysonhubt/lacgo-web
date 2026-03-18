@@ -36,6 +36,11 @@ type DayDetail = {
   khongMinhAdvice: string
 }
 
+type KhongMinhEntry = {
+  name: string
+  advice: string
+}
+
 const WEEKDAYS = ['Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'CN']
 const HEAVENLY_STEMS = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý']
 const EARTHLY_BRANCHES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi']
@@ -183,8 +188,8 @@ function buildDayDetail(cell: CalendarCell): DayDetail {
   }
 }
 
-function getKhongMinhXuatHanh(lunar: LunarDate) {
-  const cycle6_14710 = [
+function getKhongMinhXuatHanh(lunar: LunarDate): KhongMinhEntry {
+  const cycle6_14710: KhongMinhEntry[] = [
     { name: 'Đường Phong', advice: 'Rất tốt, xuất hành thuận lợi, cầu tài được như ý muốn, gặp quý nhân phù trợ.' },
     { name: 'Kim Thổ', advice: 'Ra đi nhỡ tàu, nhỡ xe, cầu tài không được, trên đường đi mất của, bất lợi.' },
     { name: 'Kim Dương', advice: 'Xuất hành tốt, có quý nhân phù trợ, tài lộc thông suốt, kiện có nhiều lý phải.' },
@@ -193,7 +198,7 @@ function getKhongMinhXuatHanh(lunar: LunarDate) {
     { name: 'Hảo Thương', advice: 'Xuất hành thuận lợi, gặp người lớn vừa lòng, làm việc việc như ý muốn, áo phẩm vinh quy.' },
   ]
 
-  const cycle8_25811 = [
+  const cycle8_25811: KhongMinhEntry[] = [
     { name: 'Thiên Đạo', advice: 'Xuất hành cầu tài nên tránh, dù được cũng rất tốn kém, thất lý mà thua.' },
     { name: 'Thiên Môn', advice: 'Xuất hành làm mọi việc đều vừa ý, cầu được ước thấy mọi việc đều thành đạt.' },
     { name: 'Thiên Đường', advice: 'Xuất hành tốt, quý nhân phù trợ, buôn bán may mắn, mọi việc đều như ý.' },
@@ -204,7 +209,7 @@ function getKhongMinhXuatHanh(lunar: LunarDate) {
     { name: 'Thiên Thương', advice: 'Xuất hành để gặp cấp trên thì tuyệt vời, cầu tài thì được tài. Mọi việc đều thuận lợi.' },
   ]
 
-  const cycle8_36912 = [
+  const cycle8_36912: KhongMinhEntry[] = [
     { name: 'Chu Tước', advice: 'Xuất hành, cầu tài đều xấu. Hay mất của, kiện cáo thua vì đuối lý.' },
     { name: 'Bạch Hổ Đầu', advice: 'Xuất hành, cầu tài đều được. Đi đâu đều thông đạt cả.' },
     { name: 'Bạch Hổ Kiếp', advice: 'Xuất hành, cầu tài được như ý muốn, đi hướng Nam và Bắc rất thuận lợi.' },
@@ -217,15 +222,19 @@ function getKhongMinhXuatHanh(lunar: LunarDate) {
 
   const day = lunar.day
 
+  const pickCycleItem = (cycle: KhongMinhEntry[], index: number): KhongMinhEntry => {
+    return cycle[index] ?? cycle[0] ?? { name: '', advice: '' }
+  }
+
   if ([1, 4, 7, 10].includes(lunar.month)) {
-    return cycle6_14710[(day - 1) % 6]
+    return pickCycleItem(cycle6_14710, (day - 1) % 6)
   }
 
   if ([2, 5, 8, 11].includes(lunar.month)) {
-    return cycle8_25811[(day - 1) % 8]
+    return pickCycleItem(cycle8_25811, (day - 1) % 8)
   }
 
-  return cycle8_36912[(day - 1) % 8]
+  return pickCycleItem(cycle8_36912, (day - 1) % 8)
 }
 
 function formatSolarDate(date: Date) {
@@ -258,12 +267,13 @@ function getCanChiYear(lunarYear: number) {
 function getAuspiciousHours(date: Date) {
   const jd = jdFromDate(date.getDate(), date.getMonth() + 1, date.getFullYear())
   const dayChiIndex = (jd + 1) % 12
-  const pattern = GOOD_HOUR_PATTERN[dayChiIndex % 6]
+  const pattern = GOOD_HOUR_PATTERN[dayChiIndex % 6] ?? ''
   const result: string[] = []
 
   for (let i = 0; i < pattern.length; i += 1) {
-    if (pattern[i] === '1') {
-      result.push(HOUR_BRANCHES[i])
+    const hourBranch = HOUR_BRANCHES[i]
+    if (pattern[i] === '1' && hourBranch) {
+      result.push(hourBranch)
     }
   }
 
