@@ -5,7 +5,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/Index.vue'),
     meta: {
       title: 'LạcGO - Ứng dụng đặt xe',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   },
   {
@@ -14,7 +15,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/About.vue'),
     meta: {
       title: 'Giới thiệu',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   },
   {
@@ -23,7 +25,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/HelpCenter.vue'),
     meta: {
       title: 'Trung tâm hỗ trợ',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   },
   {
@@ -32,7 +35,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/Terms.vue'),
     meta: {
       title: 'Điều khoản sử dụng',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   },
   {
@@ -41,7 +45,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/Privacy.vue'),
     meta: {
       title: 'Chính sách bảo mật',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   },
   {
@@ -50,7 +55,8 @@ export const landingPages: any = [
     component: () => import('@/pages/landing/LunarCalendar.vue'),
     meta: {
       title: 'Âm Lịch',
-      layout: 'guest'
+      layout: 'guest',
+      useAppTheme: false,
     }
   }
 ]

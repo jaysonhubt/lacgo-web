@@ -14,7 +14,7 @@
       </div>
       <div class="w-100">
         <h1 class="text-h4 font-weight-bold mb-2">Đăng Nhập</h1>
-        <p class="text-body-1 text-grey-darken-1">Chào mừng bạn quay trở lại</p>
+        <p class="text-body-1 auth-subtitle">Chào mừng bạn quay trở lại</p>
       </div>
     </div>
 
@@ -152,7 +152,25 @@ const handleLogin = async () => {
 <style scoped>
 .login-container {
   min-height: 100vh;
-  background: white;
+  background: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-on-background));
+}
+
+.auth-subtitle {
+  color: rgba(var(--v-theme-on-background), 0.72);
+}
+
+.login-container :deep(.v-field) {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.login-container :deep(.v-field__input) {
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.login-container :deep(.v-label.v-field-label) {
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 /* Responsive */
 @media (max-width: 600px) {

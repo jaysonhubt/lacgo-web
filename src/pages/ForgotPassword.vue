@@ -14,7 +14,7 @@
       </div>
       <div class="w-100">
         <h1 class="text-h4 font-weight-bold mb-2">Quên Mật Khẩu</h1>
-        <p class="text-body-1 text-grey-darken-1">Nhập email để nhận liên kết đặt lại mật khẩu</p>
+        <p class="text-body-1 auth-subtitle">Nhập email để nhận liên kết đặt lại mật khẩu</p>
       </div>
     </div>
 
@@ -70,7 +70,7 @@
     <!-- Footer -->
     <v-divider></v-divider>
     <v-card-actions class="pa-6">
-      <div class="text-center w-100 text-body-2 text-grey-darken-1">
+      <div class="text-center w-100 text-body-2 auth-subtitle">
 
         <router-link
           variant="text"
@@ -130,7 +130,25 @@ const handleForgotPassword = async () => {
 <style scoped>
 .forgot-password-container {
   min-height: 100vh;
-  background: white;
+  background: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-on-background));
+}
+
+.auth-subtitle {
+  color: rgba(var(--v-theme-on-background), 0.72);
+}
+
+.forgot-password-container :deep(.v-field) {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.forgot-password-container :deep(.v-field__input) {
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.forgot-password-container :deep(.v-label.v-field-label) {
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 /* Responsive */

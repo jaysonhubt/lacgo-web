@@ -84,6 +84,24 @@
               inset
             ></v-switch>
           </div>
+
+          <div class="setting-item">
+            <div class="setting-left">
+              <v-icon color="indigo-lighten-1" size="22">
+                {{ isDarkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
+              </v-icon>
+              <div class="setting-info">
+                <span class="setting-label">Giao diện tối</span>
+                <span class="setting-desc">Bật để dùng giao diện tối</span>
+              </div>
+            </div>
+            <v-switch
+              v-model="isDarkMode"
+              color="primary"
+              hide-details
+              inset
+            ></v-switch>
+          </div>
         </div>
       </div>
 
@@ -151,10 +169,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAppStore } from '@/stores/app'
 
 const router = useRouter()
+const appStore = useAppStore()
+
+const isDarkMode = computed({
+  get: () => appStore.themeMode === 'dark',
+  set: (value: boolean) => {
+    appStore.setThemeMode(value ? 'dark' : 'light')
+  }
+})
 
 // Settings
 const settings = ref({
@@ -179,7 +206,7 @@ const clearCache = () => {
 <style scoped>
 .settings-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -217,17 +244,17 @@ const clearCache = () => {
 .section-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.68);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px 4px;
 }
 
 .settings-list {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .setting-item {
@@ -235,7 +262,7 @@ const clearCache = () => {
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .setting-item:last-child {
@@ -248,7 +275,7 @@ const clearCache = () => {
 }
 
 .setting-item.clickable:hover {
-  background: #f8f9fa;
+  background: rgba(var(--v-theme-on-surface), 0.06);
 }
 
 .setting-left {
@@ -268,17 +295,17 @@ const clearCache = () => {
 .setting-label {
   font-size: 0.95rem;
   font-weight: 500;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .setting-desc {
   font-size: 0.8rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
 }
 
 .setting-value {
   font-size: 0.9rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.68);
 }
 
 /* Responsive */

@@ -14,7 +14,7 @@
       </div>
       <div class="w-100">
         <h1 class="text-h4 font-weight-bold mb-2">Tạo Tài Khoản</h1>
-        <p class="text-body-1 text-grey-darken-1">Đăng ký để bắt đầu sử dụng dịch vụ</p>
+        <p class="text-body-1 auth-subtitle">Đăng ký để bắt đầu sử dụng dịch vụ</p>
       </div>
     </div>
 
@@ -104,7 +104,7 @@
           class="mb-6"
         >
           <template v-slot:label>
-            <span class="text-body-2 text-grey-darken-1">
+            <span class="text-body-2 auth-subtitle">
               Tôi đồng ý với
               <v-btn
                 variant="text"
@@ -455,7 +455,25 @@ const handleRegister = async () => {
 <style scoped>
 .register-container {
   min-height: 100vh;
-  background: white;
+  background: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-on-background));
+}
+
+.auth-subtitle {
+  color: rgba(var(--v-theme-on-background), 0.72);
+}
+
+.register-container :deep(.v-field) {
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.register-container :deep(.v-field__input) {
+  color: rgb(var(--v-theme-on-surface));
+}
+
+.register-container :deep(.v-label.v-field-label) {
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 /* Responsive */

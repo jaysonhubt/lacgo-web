@@ -315,7 +315,7 @@ const useVoucher = (voucher: any) => {
 <style scoped>
 .gift-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -408,7 +408,7 @@ const useVoucher = (voucher: any) => {
 
 /* Content */
 .content {
-  background: white;
+  background: rgb(var(--v-theme-surface));
 }
 
 /* Tabs */
@@ -419,7 +419,7 @@ const useVoucher = (voucher: any) => {
 /* Tab Content */
 .tab-content {
   padding: 20px 16px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   min-height: 400px;
 }
 
@@ -431,7 +431,7 @@ const useVoucher = (voucher: any) => {
 }
 
 .voucher-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   padding: 18px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -508,13 +508,13 @@ const useVoucher = (voucher: any) => {
 .voucher-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 6px 0;
 }
 
 .voucher-desc {
   font-size: 0.875rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 14px 0;
   line-height: 1.4;
 }
@@ -524,13 +524,13 @@ const useVoucher = (voucher: any) => {
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .voucher-value .discount {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 .voucher-expiry {
@@ -538,7 +538,7 @@ const useVoucher = (voucher: any) => {
   align-items: center;
   gap: 4px;
   font-size: 0.8rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
 }
 
 /* Rewards Grid */
@@ -549,7 +549,7 @@ const useVoucher = (voucher: any) => {
 }
 
 .reward-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -569,7 +569,7 @@ const useVoucher = (voucher: any) => {
 
 .reward-image {
   height: 150px;
-  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+  background: rgba(var(--v-theme-primary), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -582,13 +582,13 @@ const useVoucher = (voucher: any) => {
 .reward-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 6px 0;
 }
 
 .reward-desc {
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 12px 0;
 }
 
@@ -605,7 +605,7 @@ const useVoucher = (voucher: any) => {
 .reward-points .points {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 /* My Vouchers List */
@@ -616,7 +616,7 @@ const useVoucher = (voucher: any) => {
 }
 
 .my-voucher-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -676,13 +676,13 @@ const useVoucher = (voucher: any) => {
 .voucher-name {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 4px 0;
 }
 
 .voucher-code {
   font-size: 0.8rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
   font-family: monospace;
 }
@@ -698,12 +698,12 @@ const useVoucher = (voucher: any) => {
 .voucher-discount-sm {
   font-size: 1rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 .voucher-expiry-sm {
   font-size: 0.75rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
 }
 
 /* Empty State */
@@ -715,13 +715,13 @@ const useVoucher = (voucher: any) => {
 .empty-state h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 1rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

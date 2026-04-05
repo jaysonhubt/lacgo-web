@@ -21,7 +21,21 @@ export default createVuetify({
       lacGOTheme: {
         dark: false,
         colors: {
-          main: '#66BB6A',
+          primary: '#66BB6A',
+          background: '#F8F9FA',
+          surface: '#FFFFFF',
+          'on-surface': '#424242',
+          'on-background': '#1F1F1F',
+        }
+      },
+      lacGODarkTheme: {
+        dark: true,
+        colors: {
+          primary: '#66BB6A',
+          background: '#121212',
+          surface: '#1E1E1E',
+          'on-surface': '#E8E8E8',
+          'on-background': '#FFFFFF',
         }
       }
     }

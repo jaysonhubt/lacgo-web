@@ -150,7 +150,7 @@ const openSearch = () => {
 <style scoped>
 .messages-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -177,7 +177,7 @@ const openSearch = () => {
 
 /* Content */
 .content {
-  background: white;
+  background: rgb(var(--v-theme-surface));
 }
 
 /* Tabs */
@@ -187,7 +187,7 @@ const openSearch = () => {
 
 /* Messages List */
 .messages-list {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 .message-item {
@@ -195,8 +195,8 @@ const openSearch = () => {
   align-items: center;
   gap: 14px;
   padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #f0f0f0;
+  background: rgb(var(--v-theme-surface));
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   animation: slideIn 0.4s ease-out backwards;
@@ -215,7 +215,7 @@ const openSearch = () => {
 }
 
 .message-item:hover {
-  background: #f8fdf8;
+  background: rgba(var(--v-theme-on-surface), 0.04);
   transform: translateX(4px);
 }
 
@@ -236,7 +236,7 @@ const openSearch = () => {
   height: 20px;
   background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid rgb(var(--v-theme-surface));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,13 +258,13 @@ const openSearch = () => {
 .contact-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0;
 }
 
 .message-time {
   font-size: 0.8rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
   flex-shrink: 0;
   margin-left: 8px;
 }
@@ -277,7 +277,7 @@ const openSearch = () => {
 
 .last-message {
   font-size: 0.9rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -286,7 +286,7 @@ const openSearch = () => {
 
 .last-message.unread {
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .read-icon {
@@ -303,13 +303,13 @@ const openSearch = () => {
 .empty-state h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 1rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

@@ -317,8 +317,8 @@ onMounted(() => {
 }
 
 .header-section {
-  background: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+  background: rgb(var(--v-theme-background));
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
 }
 
 .header-content {
@@ -330,11 +330,11 @@ onMounted(() => {
 }
 
 .header-top h1 {
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .trip-info-section {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 .trip-info-card {
@@ -347,12 +347,12 @@ onMounted(() => {
 }
 
 .driver-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   padding-bottom: 16px;
 }
 
 .trip-details-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   padding-bottom: 16px;
 }
 
@@ -368,7 +368,7 @@ onMounted(() => {
 }
 
 .route-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   padding-bottom: 16px;
 }
 
@@ -393,15 +393,15 @@ onMounted(() => {
 }
 
 .route-dot.start {
-  background: #4caf50;
-  border: 3px solid white;
-  box-shadow: 0 0 0 2px #4caf50;
+  background: rgb(var(--v-theme-primary));
+  border: 3px solid rgb(var(--v-theme-surface));
+  box-shadow: 0 0 0 2px rgb(var(--v-theme-primary));
 }
 
 .route-dot.end {
-  background: #f44336;
-  border: 3px solid white;
-  box-shadow: 0 0 0 2px #f44336;
+  background: rgb(var(--v-theme-error));
+  border: 3px solid rgb(var(--v-theme-surface));
+  box-shadow: 0 0 0 2px rgb(var(--v-theme-error));
 }
 
 .route-line {
@@ -410,7 +410,7 @@ onMounted(() => {
   top: 18px;
   bottom: 18px;
   width: 2px;
-  background: linear-gradient(to bottom, #4caf50, #f44336);
+  background: linear-gradient(to bottom, rgb(var(--v-theme-primary)), rgb(var(--v-theme-error)));
 }
 
 .route-content {
@@ -418,7 +418,7 @@ onMounted(() => {
 }
 
 .vehicle-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   padding-bottom: 16px;
 }
 
@@ -434,7 +434,7 @@ onMounted(() => {
 }
 
 .reviews-section {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   padding-bottom: 16px;
 }
 
@@ -448,7 +448,7 @@ onMounted(() => {
 }
 
 .action-section {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   position: sticky;
   bottom: 0;
   z-index: 10;

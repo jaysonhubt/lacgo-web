@@ -209,8 +209,8 @@ const getStatusText = (status: string) => {
 }
 
 .header-section {
-  background: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+  background: rgb(var(--v-theme-background));
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.12);
 }
 
 .header-content {
@@ -222,11 +222,11 @@ const getStatusText = (status: string) => {
 }
 
 .header-top h1 {
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .history-section {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 .history-card {

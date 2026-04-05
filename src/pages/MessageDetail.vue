@@ -188,7 +188,7 @@ onMounted(() => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 /* Header */
@@ -234,7 +234,7 @@ onMounted(() => {
   flex: 1;
   overflow-y: auto;
   padding: 20px 16px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 .messages-content {
@@ -252,10 +252,10 @@ onMounted(() => {
 .date-divider span {
   display: inline-block;
   padding: 6px 16px;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--v-theme-on-surface), 0.08);
   border-radius: 12px;
   font-size: 0.8rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   font-weight: 500;
 }
 
@@ -300,11 +300,11 @@ onMounted(() => {
 }
 
 .message-bubble.theirs .bubble-content {
-  background: white;
-  color: #424242;
+  background: rgb(var(--v-theme-surface));
+  color: rgb(var(--v-theme-on-surface));
   border-bottom-left-radius: 4px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f0f0f0;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .message-text {
@@ -324,14 +324,14 @@ onMounted(() => {
 }
 
 .message-bubble.theirs .message-time {
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 /* Input Area */
 .input-area {
   padding: 12px 16px;
-  background: white;
-  border-top: 1px solid #e0e0e0;
+  background: rgb(var(--v-theme-surface));
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.12);
   display: flex;
   gap: 12px;
   align-items: center;

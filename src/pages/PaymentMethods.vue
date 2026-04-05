@@ -148,7 +148,7 @@ const addPaymentMethod = () => {
 <style scoped>
 .payment-methods-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -184,7 +184,7 @@ const addPaymentMethod = () => {
 }
 
 .payment-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   padding: 18px;
   display: flex;
@@ -202,14 +202,14 @@ const addPaymentMethod = () => {
 }
 
 .payment-card.selected {
-  border-color: #4caf50;
-  background: rgba(76, 175, 80, 0.02);
+  border-color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.08);
 }
 
 .payment-icon {
   width: 56px;
   height: 56px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -225,13 +225,13 @@ const addPaymentMethod = () => {
 .payment-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 4px 0;
 }
 
 .payment-desc {
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 
@@ -246,14 +246,14 @@ const addPaymentMethod = () => {
   align-items: flex-start;
   gap: 10px;
   padding: 16px;
-  background: #e3f2fd;
+  background: rgba(var(--v-theme-info), 0.16);
   border-radius: 12px;
-  border: 1px solid #bbdefb;
+  border: 1px solid rgba(var(--v-theme-info), 0.32);
 }
 
 .info-section p {
   font-size: 0.85rem;
-  color: #616161;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
   line-height: 1.5;
 }
@@ -267,13 +267,13 @@ const addPaymentMethod = () => {
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

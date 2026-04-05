@@ -115,7 +115,7 @@ const selectLanguage = (lang: any) => {
 <style scoped>
 .language-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -147,14 +147,14 @@ const selectLanguage = (lang: any) => {
 
 .description {
   font-size: 0.95rem;
-  color: #616161;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 20px 0;
   line-height: 1.5;
 }
 
 /* Languages List */
 .languages-list {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -168,7 +168,7 @@ const selectLanguage = (lang: any) => {
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .language-item:last-child {
@@ -176,17 +176,17 @@ const selectLanguage = (lang: any) => {
 }
 
 .language-item:hover {
-  background: #f8f9fa;
+  background: rgba(var(--v-theme-on-surface), 0.04);
 }
 
 .language-item.selected {
-  background: rgba(76, 175, 80, 0.04);
+  background: rgba(var(--v-theme-primary), 0.08);
 }
 
 .language-icon {
   width: 48px;
   height: 48px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -206,13 +206,13 @@ const selectLanguage = (lang: any) => {
 .language-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 4px 0;
 }
 
 .language-native {
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 
@@ -222,14 +222,14 @@ const selectLanguage = (lang: any) => {
   align-items: flex-start;
   gap: 10px;
   padding: 16px;
-  background: #e3f2fd;
+  background: rgba(var(--v-theme-info), 0.16);
   border-radius: 12px;
-  border: 1px solid #bbdefb;
+  border: 1px solid rgba(var(--v-theme-info), 0.32);
 }
 
 .info-box p {
   font-size: 0.85rem;
-  color: #616161;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
   line-height: 1.5;
 }

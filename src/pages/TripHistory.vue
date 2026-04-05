@@ -187,7 +187,7 @@ const goToTripDetail = (trip: any) => {
 <style scoped>
 .trip-history-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -238,7 +238,7 @@ const goToTripDetail = (trip: any) => {
 }
 
 .trip-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -260,7 +260,7 @@ const goToTripDetail = (trip: any) => {
 
 .trip-date {
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 .trip-route {
@@ -275,13 +275,13 @@ const goToTripDetail = (trip: any) => {
   align-items: center;
   gap: 8px;
   font-size: 0.9rem;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .route-divider {
   width: 1px;
   height: 10px;
-  background: #e0e0e0;
+  background: rgba(var(--v-theme-on-surface), 0.2);
   margin-left: 6px;
 }
 
@@ -290,7 +290,7 @@ const goToTripDetail = (trip: any) => {
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .trip-info {
@@ -298,13 +298,13 @@ const goToTripDetail = (trip: any) => {
   align-items: center;
   gap: 6px;
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 .trip-price {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 /* Empty State */
@@ -316,13 +316,13 @@ const goToTripDetail = (trip: any) => {
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

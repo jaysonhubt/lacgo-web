@@ -282,7 +282,7 @@ onMounted(() => {
 <style scoped>
 .trip-search-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -331,7 +331,7 @@ onMounted(() => {
 }
 
 .trip-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   padding: 18px;
   border: none;
@@ -371,14 +371,14 @@ onMounted(() => {
 .route-item .location {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   line-height: 1.4;
 }
 
 .route-divider {
   width: 1px;
   height: 12px;
-  background: #e0e0e0;
+  background: rgba(var(--v-theme-on-surface), 0.2);
   margin-left: 7px;
 }
 
@@ -387,7 +387,7 @@ onMounted(() => {
   display: flex;
   gap: 16px;
   padding-top: 6px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .info-item {
@@ -395,7 +395,7 @@ onMounted(() => {
   align-items: center;
   gap: 6px;
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
 /* Driver Section */
@@ -404,7 +404,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  background: rgba(76, 175, 80, 0.04);
+  background: rgba(var(--v-theme-primary), 0.08);
   border-radius: 10px;
   gap: 8px;
 }
@@ -420,18 +420,18 @@ onMounted(() => {
 .driver-name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 .separator {
-  color: #bdbdbd;
+  color: rgba(var(--v-theme-on-surface), 0.4);
   font-size: 0.75rem;
 }
 
 .vehicle-plate {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
   letter-spacing: 0.3px;
 }
 
@@ -441,20 +441,20 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.1);
 }
 
 .price {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 /* No Trips & No Data States */
 .no-trips {
   text-align: center;
   padding: 80px 20px;
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
@@ -463,14 +463,14 @@ onMounted(() => {
 .no-data h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .no-trips p,
 .no-data p {
   font-size: 1rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 24px 0;
 }
 

@@ -215,7 +215,7 @@ const acceptPrivacy = () => {
 <style scoped>
 .privacy-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -250,17 +250,17 @@ const acceptPrivacy = () => {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #e8f5e9;
+  background: rgba(var(--v-theme-success), 0.14);
   border-radius: 12px;
   margin-bottom: 20px;
   font-size: 0.85rem;
-  color: #616161;
-  border: 1px solid #c8e6c9;
+  color: rgba(var(--v-theme-on-surface), 0.72);
+  border: 1px solid rgba(var(--v-theme-success), 0.3);
 }
 
 /* Privacy Content */
 .privacy-content {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -278,7 +278,7 @@ const acceptPrivacy = () => {
 .section-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 12px 0;
 }
 
@@ -293,13 +293,13 @@ const acceptPrivacy = () => {
 .subsection-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 10px 0;
 }
 
 .section-text {
   font-size: 0.95rem;
-  color: #616161;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   line-height: 1.7;
   margin: 0;
 }
@@ -312,12 +312,12 @@ const acceptPrivacy = () => {
 .section-list li {
   margin-bottom: 8px;
   line-height: 1.6;
-  color: #616161;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   font-size: 0.95rem;
 }
 
 .section-list li strong {
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   font-weight: 600;
 }
 
@@ -334,9 +334,9 @@ const acceptPrivacy = () => {
   align-items: center;
   gap: 12px;
   padding: 14px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   border-radius: 12px;
-  border: 1px solid #e8f5e9;
+  border: 1px solid rgba(var(--v-theme-success), 0.22);
 }
 
 .security-info {
@@ -347,13 +347,13 @@ const acceptPrivacy = () => {
 .security-info h4 {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 4px 0;
 }
 
 .security-info p {
   font-size: 0.8rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 
@@ -370,10 +370,10 @@ const acceptPrivacy = () => {
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   border-radius: 8px;
   font-size: 0.9rem;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 /* Accept Section */

@@ -162,7 +162,7 @@ const addAddress = () => {
 <style scoped>
 .saved-addresses-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -198,7 +198,7 @@ const addAddress = () => {
 }
 
 .address-card {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -211,7 +211,7 @@ const addAddress = () => {
 .address-icon {
   width: 48px;
   height: 48px;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -234,13 +234,13 @@ const addAddress = () => {
 .address-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0;
 }
 
 .address-text {
   font-size: 0.9rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
   line-height: 1.5;
 }
@@ -254,13 +254,13 @@ const addAddress = () => {
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

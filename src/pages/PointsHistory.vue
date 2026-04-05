@@ -155,7 +155,7 @@ const getHistoryIcon = (type: string) => {
 <style scoped>
 .points-history-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -184,7 +184,7 @@ const getHistoryIcon = (type: string) => {
 .points-card {
   margin: 20px 16px;
   padding: 30px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fdf8 100%);
+  background: linear-gradient(135deg, rgb(var(--v-theme-surface)) 0%, rgba(var(--v-theme-primary), 0.08) 100%);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -200,20 +200,20 @@ const getHistoryIcon = (type: string) => {
 .points-value {
   font-size: 3rem;
   font-weight: 700;
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
   margin: 0;
   line-height: 1;
 }
 
 .points-label {
   font-size: 1rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 8px 0 0 0;
 }
 
 /* Content */
 .content {
-  background: white;
+  background: rgb(var(--v-theme-surface));
 }
 
 /* Tabs */
@@ -223,12 +223,12 @@ const getHistoryIcon = (type: string) => {
 
 /* History List */
 .history-list {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding: 16px;
 }
 
 .history-item {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -264,20 +264,20 @@ const getHistoryIcon = (type: string) => {
 .history-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 4px 0;
 }
 
 .history-desc {
   font-size: 0.85rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 4px 0;
   line-height: 1.4;
 }
 
 .history-time {
   font-size: 0.8rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
 }
 
 .history-points {
@@ -290,11 +290,11 @@ const getHistoryIcon = (type: string) => {
 }
 
 .history-points.earned .points-change {
-  color: #4caf50;
+  color: rgb(var(--v-theme-primary));
 }
 
 .history-points.spent .points-change {
-  color: #f44336;
+  color: rgb(var(--v-theme-error));
 }
 
 /* Empty State */
@@ -306,13 +306,13 @@ const getHistoryIcon = (type: string) => {
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 

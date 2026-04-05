@@ -110,8 +110,8 @@
       <div class="logout-section">
         <v-btn
           color="red-lighten-1"
-          variant="outlined"
           size="large"
+          rounded
           block
           @click="confirmLogout"
           :loading="isLoggingOut"
@@ -141,8 +141,9 @@
               Hủy
             </v-btn>
             <v-btn
-              color="red-lighten-1"
+              color="red-lighten-1 px-3"
               variant="flat"
+              rounded
               @click="handleLogout"
               :loading="isLoggingOut"
               :disabled="isLoggingOut"
@@ -341,32 +342,13 @@ const handleLogout = async () => {
   isLoggingOut.value = true
 
   try {
-    // Logout always succeeds locally even if API fails
     await authStore.logout()
-
     showLogoutDialog.value = false
-    snackbarMessage.value = 'Đăng xuất thành công'
-    snackbarColor.value = 'success'
-    showSnackbar.value = true
-
-    // Redirect to login after a short delay
-    setTimeout(() => {
-      router.push('/login')
-    }, 500)
   } catch (error) {
-    // This should rarely happen, but handle it gracefully
     console.error('Logout error:', error)
-
-    // Still redirect to login even if there's an unexpected error
-    showLogoutDialog.value = false
-    snackbarMessage.value = 'Đăng xuất thành công'
-    snackbarColor.value = 'success'
-    showSnackbar.value = true
-
-    setTimeout(() => {
-      router.push('/login')
-    }, 500)
   } finally {
+    showLogoutDialog.value = false
+    router.push('/login')
     isLoggingOut.value = false
   }
 }
@@ -375,7 +357,7 @@ const handleLogout = async () => {
 <style scoped>
 .account-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -493,17 +475,17 @@ const handleLogout = async () => {
 .section-title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.68);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 12px 4px;
 }
 
 .menu-list {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .menu-item {
@@ -513,7 +495,7 @@ const handleLogout = async () => {
   padding: 16px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.1);
   position: relative;
 }
 
@@ -537,7 +519,7 @@ const handleLogout = async () => {
 }
 
 .menu-item:hover {
-  background: #f8fdf8;
+  background: rgba(var(--v-theme-on-surface), 0.04);
   transform: translateX(4px);
   padding-left: 20px;
 }
@@ -555,7 +537,7 @@ const handleLogout = async () => {
 .menu-label {
   font-size: 0.95rem;
   font-weight: 500;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
 }
 
 /* Logout Section */
@@ -572,7 +554,7 @@ const handleLogout = async () => {
 
 .app-version p {
   font-size: 0.85rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
   margin: 0;
 }
 

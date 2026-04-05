@@ -167,7 +167,7 @@ const confirmDeleteAccount = () => {
 <style scoped>
 .edit-profile-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -204,7 +204,7 @@ const confirmDeleteAccount = () => {
   align-items: center;
   gap: 16px;
   padding: 32px 0;
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   margin-bottom: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -212,7 +212,7 @@ const confirmDeleteAccount = () => {
 
 /* Form Section */
 .form-section {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -221,17 +221,17 @@ const confirmDeleteAccount = () => {
 
 /* Danger Zone */
 .danger-zone {
-  background: white;
+  background: rgb(var(--v-theme-surface));
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 2px solid #ffebee;
+  border: 2px solid rgba(var(--v-theme-error), 0.2);
 }
 
 .danger-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #f44336;
+  color: rgb(var(--v-theme-error));
   margin: 0 0 16px 0;
 }
 

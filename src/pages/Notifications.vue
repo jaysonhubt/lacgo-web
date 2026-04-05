@@ -188,7 +188,7 @@ const markAllAsRead = () => {
 <style scoped>
 .notifications-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
   padding-bottom: 80px;
 }
 
@@ -215,7 +215,7 @@ const markAllAsRead = () => {
 
 /* Content */
 .content {
-  background: white;
+  background: rgb(var(--v-theme-surface));
 }
 
 /* Tabs */
@@ -225,7 +225,7 @@ const markAllAsRead = () => {
 
 /* Notifications List */
 .notifications-list {
-  background: #f8f9fa;
+  background: rgb(var(--v-theme-background));
 }
 
 .notification-item {
@@ -233,8 +233,8 @@ const markAllAsRead = () => {
   align-items: flex-start;
   gap: 14px;
   padding: 16px 20px;
-  background: white;
-  border-bottom: 1px solid #f0f0f0;
+  background: rgb(var(--v-theme-surface));
+  border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -268,7 +268,7 @@ const markAllAsRead = () => {
 }
 
 .notification-item:hover {
-  background: #f8fdf8;
+  background: rgba(var(--v-theme-on-surface), 0.04);
   transform: translateX(4px);
 }
 
@@ -277,8 +277,8 @@ const markAllAsRead = () => {
 }
 
 .notification-item.unread {
-  background: #f8fdf8;
-  border-left: 3px solid #4caf50;
+  background: rgba(var(--v-theme-primary), 0.08);
+  border-left: 3px solid rgb(var(--v-theme-primary));
 }
 
 .notification-icon {
@@ -323,26 +323,26 @@ const markAllAsRead = () => {
 .notification-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 0 0 6px 0;
 }
 
 .notification-message {
   font-size: 0.9rem;
-  color: #757575;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0 0 6px 0;
   line-height: 1.4;
 }
 
 .notification-time {
   font-size: 0.8rem;
-  color: #9e9e9e;
+  color: rgba(var(--v-theme-on-surface), 0.62);
 }
 
 .unread-dot {
   width: 8px;
   height: 8px;
-  background: #4caf50;
+  background: rgb(var(--v-theme-primary));
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 6px;
@@ -357,13 +357,13 @@ const markAllAsRead = () => {
 .empty-state h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #424242;
+  color: rgb(var(--v-theme-on-surface));
   margin: 16px 0 8px 0;
 }
 
 .empty-state p {
   font-size: 1rem;
-  color: #666;
+  color: rgba(var(--v-theme-on-surface), 0.72);
   margin: 0;
 }
 
