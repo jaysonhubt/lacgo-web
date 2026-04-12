@@ -28,10 +28,12 @@ declare module 'vue-router/auto-routes' {
     '/landing/About': RouteRecordInfo<'/landing/About', '/landing/About', Record<never, never>, Record<never, never>>,
     '/landing/HelpCenter': RouteRecordInfo<'/landing/HelpCenter', '/landing/HelpCenter', Record<never, never>, Record<never, never>>,
     '/landing/Index': RouteRecordInfo<'/landing/Index', '/landing/Index', Record<never, never>, Record<never, never>>,
+    '/landing/LocalSend': RouteRecordInfo<'/landing/LocalSend', '/landing/LocalSend', Record<never, never>, Record<never, never>>,
     '/landing/LunarCalendar': RouteRecordInfo<'/landing/LunarCalendar', '/landing/LunarCalendar', Record<never, never>, Record<never, never>>,
     '/landing/Privacy': RouteRecordInfo<'/landing/Privacy', '/landing/Privacy', Record<never, never>, Record<never, never>>,
     '/landing/Terms': RouteRecordInfo<'/landing/Terms', '/landing/Terms', Record<never, never>, Record<never, never>>,
     '/Language': RouteRecordInfo<'/Language', '/Language', Record<never, never>, Record<never, never>>,
+    '/LocalSend': RouteRecordInfo<'/LocalSend', '/LocalSend', Record<never, never>, Record<never, never>>,
     '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/MessageDetail': RouteRecordInfo<'/MessageDetail', '/MessageDetail', Record<never, never>, Record<never, never>>,
     '/Messages': RouteRecordInfo<'/Messages', '/Messages', Record<never, never>, Record<never, never>>,
@@ -100,6 +102,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/landing/Index'
       views: never
     }
+    'src/pages/landing/LocalSend.vue': {
+      routes: '/landing/LocalSend'
+      views: never
+    }
     'src/pages/landing/LunarCalendar.vue': {
       routes: '/landing/LunarCalendar'
       views: never
@@ -114,6 +120,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/Language.vue': {
       routes: '/Language'
+      views: never
+    }
+    'src/pages/LocalSend.vue': {
+      routes: '/LocalSend'
       views: never
     }
     'src/pages/Login.vue': {

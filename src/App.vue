@@ -31,7 +31,7 @@ const resolveThemeName = () => {
 watch(
   [themeMode, () => route.fullPath],
   () => {
-    theme.global.name.value = resolveThemeName()
+    theme.change(resolveThemeName())
   },
   { immediate: true }
 )

@@ -58,5 +58,15 @@ export const landingPages: any = [
       layout: 'guest',
       useAppTheme: false,
     }
+  },
+  {
+    path: '/all-drop',
+    name: 'LandingLocalSend',
+    component: () => import('@/pages/landing/LocalSend.vue'),
+    meta: {
+      title: 'Local Send',
+      layout: 'guest',
+      useAppTheme: false,
+    }
   }
 ]

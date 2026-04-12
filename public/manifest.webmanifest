@@ -1,7 +1,7 @@
 {
   "name": "LạcGo",
   "short_name": "LạcGo",
-  "start_url": "/",
+  "start_url": "/login",
   "display": "standalone",
   "orientation": "portrait",
   "display_override": ["standalone", "minimal-ui"],

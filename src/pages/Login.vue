@@ -3,14 +3,16 @@
     <!-- Header -->
     <div class="auth-header text-center">
       <div class="w-100 mb-4">
-        <v-img
-          class="mx-auto"
-          :width="150"
-          cover
-          alt="LạcGO"
-          src="/logo_no_border.png"
-          eager
-        ></v-img>
+        <router-link :to="{ path: '/' }" class="logo-home-link" aria-label="Về trang chủ">
+          <v-img
+            class="mx-auto"
+            :width="150"
+            cover
+            alt="LạcGO"
+            src="/logo_no_border.png"
+            eager
+          ></v-img>
+        </router-link>
       </div>
       <div class="w-100">
         <h1 class="text-h4 font-weight-bold mb-2">Đăng Nhập</h1>
@@ -158,6 +160,11 @@ const handleLogin = async () => {
 
 .auth-subtitle {
   color: rgba(var(--v-theme-on-background), 0.72);
+}
+
+.logo-home-link {
+  display: inline-block;
+  text-decoration: none;
 }
 
 .login-container :deep(.v-field) {

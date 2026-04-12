@@ -28,6 +28,7 @@
         <div class="nav-utility">
           <p class="utility-title">Tiện Ích</p>
           <router-link to="/am-lich" class="nav-link nav-link-utility" @click="closeMenu">Âm Lịch</router-link>
+          <router-link to="/all-drop" class="nav-link nav-link-utility" @click="closeMenu">AllDrop</router-link>
         </div>
       </nav>
     </div>
