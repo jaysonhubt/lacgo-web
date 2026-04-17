@@ -196,7 +196,11 @@ function crc32Start(): number {
 function crc32Update(crc: number, bytes: Uint8Array): number {
   let c = crc >>> 0
   for (let i = 0; i < bytes.length; i += 1) {
-    c = CRC32_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8)
+    const byte = bytes[i] ?? 0
+    const tableValue = CRC32_TABLE[(c ^ byte) & 0xff] ?? 0
+
+    c = tableValue ^ (c >>> 8)
+    //c = CRC32_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8)
   }
   return c >>> 0
 }

@@ -10,7 +10,7 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      
+
       <h1 class="title">Cài đặt</h1>
       <div style="width: 40px"></div>
     </div>
